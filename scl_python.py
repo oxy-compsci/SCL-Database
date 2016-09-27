@@ -68,6 +68,11 @@ def jpg_to_text(path):
 jpg_to_text(scl_loading_zone)
 
 
+'''
+Make a front page:
+-
+'''
+
 @app.route('/')
 def display_full_courses():
     courses = get_data()
