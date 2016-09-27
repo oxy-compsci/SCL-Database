@@ -10,6 +10,14 @@ from os.path import isfile, join
 
 import shutil
 
+from os import chdir
+from os.path import dirname, realpath
+import random
+
+from flask import Flask, render_template, send_from_directory
+
+app = Flask(__name__)
+
 # My temp location of the picture files
 # scl_loading_zone = "/Volumes/Cal's HDD/Cal's Files/Google Drive/scl_testing/test_loading_zone"
 scl_loading_zone = "/test_loading_zone"
@@ -58,6 +66,20 @@ def jpg_to_text(path):
                 shutil.move(os.path.join(path, filename), dest_path)
 
 jpg_to_text(scl_loading_zone)
+
+
+@app.route('/')
+def display_full_courses():
+    courses = get_data()
+    return render_template('base.html', courses=courses)
+
+@app.route('/test_completed_files/<file>')
+def uploaded_file(file):
+    return render_template('base.html', file=file)
+
+@app.route('/test_completed_files/<file>')
+def send_file(file):
+    return send_from_directory('test_completed_files', file)
 
 
 # THIS IS A TEST!
