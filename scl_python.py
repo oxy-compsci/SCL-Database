@@ -65,7 +65,7 @@ def jpg_to_text(path):
                 shutil.move(os.path.join(path, filename), dest_path)
 
 jpg_to_text(scl_loading_zone)
-
+'''
 def get_data():
     file_names = []
     path = "/var/www/html/"
@@ -74,10 +74,9 @@ def get_data():
         file_names.append(file)
     return file_names
 
-'''
 Make a front page:
 -
-'''
+
 
 @app.route('/')
 def display_homepage():
@@ -99,3 +98,7 @@ def display_homepage():
 
 # THIS IS A TEST!
 # PART 2
+'''
+
+if __name__ == "__main__":
+    app.run(debug=True)
