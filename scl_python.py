@@ -4,7 +4,7 @@ except ImportError:
     from PIL import Image
 import pytesseract
 
-import os
+import os, sys
 from os import listdir
 from os.path import isfile, join
 
@@ -24,7 +24,6 @@ scl_loading_zone = "test_loading_zone"
 # My temp location for generated text files
 textpath = "test_text_files"
 #textpath = "/Volumes/Cal's HDD/Cal's Files/Google Drive/scl_testing/test_text_files"
-
 # My temp location for generated text files
 dest_path = "test_completed_files"
 # dest_path = "/Volumes/Cal's HDD/Cal's Files/Google Drive/scl_testing/test_completed_files"
@@ -67,28 +66,36 @@ def jpg_to_text(path):
 
 jpg_to_text(scl_loading_zone)
 
+def get_data():
+    file_names = []
+    path = "/var/www/html/"
+    dirs = os.listdir( path )
+    for file in dirs:
+        file_names.append(file)
+    return file_names
 
 '''
 Make a front page:
 -
 '''
+
+@app.route('/')
+def display_homepage():
+    return render_template('home.html', file_names=get_data())
+'''
 @app.route('/')
 def display_homepage():
     return 'Hello'
-
 '''
-@app.route('/')
-def display_full_courses():
-    courses = get_data()
-    return render_template('base.html', courses=courses)
+#
+#@app.route('/test_completed_files/<file>')
+#def uploaded_file(file):
+#    return render_template('base.html', file=file)
 
-@app.route('/test_completed_files/<file>')
-def uploaded_file(file):
-    return render_template('base.html', file=file)
+#@app.route('/test_completed_files/<file>')
+#def send_file(file):
+#    return send_from_directory('test_completed_files', file)
 
-@app.route('/test_completed_files/<file>')
-def send_file(file):
-    return send_from_directory('test_completed_files', file)
-'''
+
 # THIS IS A TEST!
 # PART 2
