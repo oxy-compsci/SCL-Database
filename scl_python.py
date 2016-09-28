@@ -20,13 +20,13 @@ app = Flask(__name__)
 
 # My temp location of the picture files
 # scl_loading_zone = "/Volumes/Cal's HDD/Cal's Files/Google Drive/scl_testing/test_loading_zone"
-scl_loading_zone = "/test_loading_zone"
+scl_loading_zone = "test_loading_zone"
 # My temp location for generated text files
-textpath = "/test_text_files"
+textpath = "test_text_files"
 #textpath = "/Volumes/Cal's HDD/Cal's Files/Google Drive/scl_testing/test_text_files"
 
 # My temp location for generated text files
-dest_path = "/test_completed_files"
+dest_path = "test_completed_files"
 # dest_path = "/Volumes/Cal's HDD/Cal's Files/Google Drive/scl_testing/test_completed_files"
 
 # checks a specific folder and finds out if it is empty or not
@@ -72,7 +72,11 @@ jpg_to_text(scl_loading_zone)
 Make a front page:
 -
 '''
+@app.route('/')
+def display_homepage():
+    return 'Hello'
 
+'''
 @app.route('/')
 def display_full_courses():
     courses = get_data()
@@ -85,7 +89,6 @@ def uploaded_file(file):
 @app.route('/test_completed_files/<file>')
 def send_file(file):
     return send_from_directory('test_completed_files', file)
-
-
+'''
 # THIS IS A TEST!
 # PART 2
