@@ -68,7 +68,7 @@ jpg_to_text(scl_loading_zone)
 
 def get_data():
     file_names = []
-    path = "/var/www/html/"
+    path = "test_completed_files"
     dirs = os.listdir( path )
     for file in dirs:
         file_names.append(file)
@@ -87,6 +87,8 @@ def display_homepage():
 def display_homepage():
     return 'Hello'
 '''
+if __name__ == '__main__':
+    app.run(debug=True)
 #
 #@app.route('/test_completed_files/<file>')
 #def uploaded_file(file):
