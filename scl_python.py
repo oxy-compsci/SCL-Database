@@ -65,7 +65,7 @@ def jpg_to_text(path):
                 shutil.move(os.path.join(path, filename), dest_path)
 
 jpg_to_text(scl_loading_zone)
-'''
+
 def get_data():
     file_names = []
     path = "test_completed_files"
@@ -74,18 +74,58 @@ def get_data():
         file_names.append(file)
     return file_names
 
-Make a front page:
--
+def get_text_data():
+    text_file_names = []
+    path = 'test_text_files'
+    dirs = os.listdir(path)
+    for file in dirs:
+        text_file_names.append(file)
+    return text_file_names
+
+
+
 
 
 @app.route('/')
 def display_homepage():
     return render_template('home.html', file_names=get_data())
+
+# make a lopp that goes through all the files in the folder, then adds them to the page
+@app.route('/<file_name>')
+def display_images(file_name):
+    image_file_names = get_data()
+    text_file_names = get_text_data()
+    nested_list = list(zip(image_file_names, text_file_names))
+    length = len(nested_list)
+    for index in range(length):
+        pairing = nested_list[index]
+    return render_template('image.html', image_file_name=pairing[0], text_file_name=pairing[1])
+
+
+@app.route('/test_completed_files/<file_name>')
+def image_file(file_name):
+    return send_from_directory('test_completed_files', file_name)
+
+'''
+    length = len(students)
+    for index in range(len(students)):
+        student = students[index]
+        if username == student.username:
+            current_student = student
+            prev_student = students[index - 1]
+            if index + 1 == len(students):
+                next_student = students[0]
+            else:
+                next_student = students[index + 1]
+'''
+
 '''
 @app.route('/')
 def display_homepage():
     return 'Hello'
-'''
+
+
+
 if __name__ == '__main__':
     app.run(debug=True)
 #
