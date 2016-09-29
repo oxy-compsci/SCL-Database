@@ -18,15 +18,13 @@ from flask import Flask, render_template, send_from_directory
 
 app = Flask(__name__)
 
-# My temp location of the picture files
-# scl_loading_zone = "/Volumes/Cal's HDD/Cal's Files/Google Drive/scl_testing/test_loading_zone"
+# Creating variables for the location
+# of the image loading zone, completed
+# files, and text files
 scl_loading_zone = "test_loading_zone"
-# My temp location for generated text files
 textpath = "test_text_files"
-#textpath = "/Volumes/Cal's HDD/Cal's Files/Google Drive/scl_testing/test_text_files"
-# My temp location for generated text files
 dest_path = "test_completed_files"
-# dest_path = "/Volumes/Cal's HDD/Cal's Files/Google Drive/scl_testing/test_completed_files"
+
 
 # checks a specific folder and finds out if it is empty or not
 def file_check(path):
