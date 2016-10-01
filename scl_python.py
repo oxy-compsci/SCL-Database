@@ -101,8 +101,6 @@ def display_homepage():
 # make a loop that goes through all the files in the folder, then adds them to the page
 @app.route('/<file_name>')
 def display_images(file_name):
-    image_file_names = get_img_filenames()
-    text_file_names = get_txt_filenames()
     file_number = re.search('document(.*)image', file_name)
     file_number = file_number.group(1)
     image_file_name = 'document' + str(file_number) + 'image.jpg'
