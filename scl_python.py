@@ -1,21 +1,12 @@
+import os
+import re
+
 try:
     import Image
 except ImportError:
     from PIL import Image
-import pytesseract
-
-import os, sys
-from os import listdir
-from os.path import isfile, join
-
-import shutil
-
-from os import chdir
-from os.path import dirname, realpath
-import random
-
 from flask import Flask, render_template, send_from_directory
-import re
+import pytesseract
 
 app = Flask(__name__)
 
@@ -32,7 +23,7 @@ Dest_path = "completed_files"
 
 
 def file_check(path):
-    files_no_folders = [f for f in listdir(path) if isfile(join(path, f))]
+    files_no_folders = [f for f in os.listdir(path) if os.path.isfile(os.path.join(path, f))]
     if len(files_no_folders) <= 1:
         return False
     else:
