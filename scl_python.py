@@ -15,7 +15,7 @@ from os.path import dirname, realpath
 import random
 
 from flask import Flask, render_template, send_from_directory
-import glob
+import re
 
 app = Flask(__name__)
 
@@ -61,7 +61,7 @@ def run_image(path):
     count = -1
     if file_check(path):
         for filename in os.listdir(path):
-            print(filename)
+            print("checking if {} is an image file".format(filename))
             if filename.endswith(".jpg" or ".jpeg" or ".png" or ".gif" or ".tif"):
                 filename = os.path.join(path, filename)
                 count += 1
@@ -73,7 +73,6 @@ def run_image(path):
                 os.rename(filename, image_rename)
 
 
-
 run_image(Loading_zone)
 
 
@@ -83,9 +82,10 @@ run_image(Loading_zone)
 def get_img_filenames():
     file_names = []
     path = "completed_files"
-    dirs = os.listdir( path )
+    dirs = os.listdir(path)
     for file in dirs:
-        file_names.append(file)
+        if file.startswith('document'):
+            file_names.append(file)
     return file_names
 
 
@@ -94,16 +94,17 @@ def get_img_filenames():
 
 def get_txt_filenames():
     text_file_names = []
-    path = 'completed_text_files'
-    dirs = os.listdir(path)
+    dirs = os.listdir(Text_path)
     for file in dirs:
-        text_file_names.append(file)
+        if file.startswith('document'):
+            text_file_names.append(file)
+    print(text_file_names)
     return text_file_names
 
 
 @app.route('/')
 def display_homepage():
-    return render_template('home.html', file_names=get_img_filenames())
+    return render_template('home.html', text_file_names=get_img_filenames())
 
 
 # make a loop that goes through all the files in the folder, then adds them to the page
@@ -111,16 +112,21 @@ def display_homepage():
 def display_images(file_name):
     image_file_names = get_img_filenames()
     text_file_names = get_txt_filenames()
-    nested_list = list(zip(image_file_names, text_file_names))
-    length = len(nested_list)
-    for index in range(length):
-        pairing = nested_list[index]
-    return render_template('image.html', image_file_name=pairing[0], text_file_name=pairing[1])
+    file_number = re.search('document(.*)image', file_name)
+    file_number = file_number.group(1)
+    image_file_name = 'document' + str(file_number) + 'image.jpg'
+    text_file_name = 'document' + str(file_number) + 'text'
+    return render_template('image.html', image_file_name=image_file_name, text_file_name=text_file_name)
 
 
 @app.route('/completed_files/<file_name>')
 def image_file(file_name):
     return send_from_directory('completed_files', file_name)
+
+
+@app.route('/completed_text_files/<file_name>')
+def text_file(file_name):
+    return send_from_directory('completed_text_files', file_name)
 
 
 '''
