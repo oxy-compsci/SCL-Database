@@ -81,9 +81,6 @@ def get_text_data():
     return text_file_names
 
 
-
-
-
 @app.route('/')
 def display_homepage():
     return render_template('home.html', file_names=get_data())
@@ -104,18 +101,6 @@ def display_images(file_name):
 def image_file(file_name):
     return send_from_directory('test_completed_files', file_name)
 
-'''
-    length = len(students)
-    for index in range(len(students)):
-        student = students[index]
-        if username == student.username:
-            current_student = student
-            prev_student = students[index - 1]
-            if index + 1 == len(students):
-                next_student = students[0]
-            else:
-                next_student = students[index + 1]
-'''
 
 '''
 @app.route('/')
