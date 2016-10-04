@@ -5,8 +5,8 @@
     <title>SCL Database</title>
 </head>
 <body>
-    {% for file in file_names %}
-    <p><a href="/<file_name>"> {{ file }} </a></p>
+    {% for file in text_file_names %}
+    <p><a href="/{{ file }}">{{ file }}</a></p>
     {% endfor %}
 </body>
 </html>
