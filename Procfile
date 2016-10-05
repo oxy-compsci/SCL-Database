@@ -1,1 +1,1 @@
-web: gunicorn scl-database:app --log-file=-
+web: gunicorn scl_python:app --log-file=-
