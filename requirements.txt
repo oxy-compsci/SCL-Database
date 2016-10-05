@@ -1,3 +1,6 @@
-Pillow
+Flask==0.10.1
+Jinja2==2.8
+Werkzeug==0.11.5
+gunicorn==19.4.5
 pytesseract
-flask
+pillow

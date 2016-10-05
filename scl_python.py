@@ -1,3 +1,6 @@
+import os
+import re
+
 try:
     import Image
 except ImportError:
@@ -67,7 +70,7 @@ def run_image(path):
                 filename = os.path.join(path, filename)
                 count += 1
                 text_name = "document" + str(count) + "text"
-                image_rename = os.path.join(Dest_path, "document" + str(count) + "image.jpg")
+                image_rename = os.path.join(Dest_path, "document" + str(count) + "image")
                 text = ocr_extract(filename)
                 text_file_creator(text, text_name, Text_path)
                 print("renaming {} to {}".format(filename, image_rename))
