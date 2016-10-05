@@ -63,14 +63,17 @@ def run_image(path):
         for filename in os.listdir(path):
             print("checking if {} is an image file".format(filename))
             if filename.endswith(".jpg" or ".jpeg" or ".png" or ".gif" or ".tif"):
+                print("{} is an image file".format(filename))
                 filename = os.path.join(path, filename)
                 count += 1
                 text_name = "document" + str(count) + "text"
-                image_rename = os.path.join(Dest_path, "document" + str(count) + "image")
+                image_rename = os.path.join(Dest_path, "document" + str(count) + "image.jpg")
                 text = ocr_extract(filename)
                 text_file_creator(text, text_name, Text_path)
                 print("renaming {} to {}".format(filename, image_rename))
                 os.rename(filename, image_rename)
+            else:
+                print("{} is not an image file".format(filename))
 
 
 run_image(Loading_zone)
@@ -112,11 +115,20 @@ def display_homepage():
 def display_images(file_name):
     image_file_names = get_img_filenames()
     text_file_names = get_txt_filenames()
+    nested_list = list(zip(image_file_names, text_file_names))
+    length = len(nested_list)
+    for index in range(length):
+        pairing = nested_list[index]
     file_number = re.search('document(.*)image', file_name)
     file_number = file_number.group(1)
     image_file_name = 'document' + str(file_number) + 'image.jpg'
     text_file_name = 'document' + str(file_number) + 'text'
-    return render_template('image.html', image_file_name=image_file_name, text_file_name=text_file_name)
+    text_location = "completed_text_files/" + text_file_name
+    with open(text_location, "r") as f:
+        txt_content = f.read()
+    return render_template('image.html', image_file_name=image_file_name, text_file_name=text_file_name, txt_content=txt_content)
+
+
 
 
 @app.route('/completed_files/<file_name>')
