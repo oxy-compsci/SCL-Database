@@ -23,7 +23,8 @@ import re
 app = Flask(__name__)
 
 
-# FOLDER LOCATIONS
+# Loading_zone is where image files are to uploaded, Text_path is a folder to save completed OCR text files, and
+# Dest_path is the folder for the images after they are run through OCR.
 
 
 Loading_zone = "loading_zone"
@@ -31,8 +32,8 @@ Text_path = "completed_text_files"
 Dest_path = "completed_files"
 
 
-# CHECKS FOR FILES IN FOLDER
-
+# file_check takes a given file as an argument, returns false if that folder contains less than or equal to one file,
+# otherwise, returns true.
 
 def file_check(path):
     files_no_folders = [f for f in listdir(path) if isfile(join(path, f))]
@@ -42,23 +43,24 @@ def file_check(path):
         return True
 
 
-# IMAGE TO OCR STRING
-
+# ocr_extract takes an (image) file, runs it through OCR, and returns a string of text
 
 def ocr_extract(file):
     ocr_text = pytesseract.image_to_string(Image.open(file))
     return ocr_text
 
 
-# STRING TO TEXT FILE CREATOR
-
+# text_file_creator takes a string of text, a filename and a path (folder) and saves the string into the designated
+# with the designated filename
 
 def text_file_creator(string, filename, path):
     new_file = open(os.path.join(path, filename), "w")
     new_file.write(string)
 
 
-# IMAGE CONVERTER USING ABOVE FUNCTIONS
+# run_image combines the above functions, it takes a folder, if that folder has more than one file in it, the function
+# loops through each file. If that file is a JPEG, PNG, GIF or TIF image, the image will be run through OCR, and the
+# associated text file and the original image will be saved to Dest_path, or the completed files folder in Python.
 
 def run_image(path):
     count = -1
@@ -82,7 +84,8 @@ def run_image(path):
 run_image(Loading_zone)
 
 
-# DESCRIPTION NEEDED
+# get_img_filenames creates a list of all the file names beginning with the word "document" within the "completed_files"
+# folder
 
 
 def get_img_filenames():
@@ -95,8 +98,8 @@ def get_img_filenames():
     return file_names
 
 
-# DESCRIPTION NEEDED
-
+# get_txt_filenames creates a list of all the file names beginning with the word "document" within the
+# "completed_text_files" folder
 
 def get_txt_filenames():
     text_file_names = []
@@ -142,42 +145,6 @@ def image_file(file_name):
 @app.route('/completed_text_files/<file_name>')
 def text_file(file_name):
     return send_from_directory('completed_text_files', file_name)
-
-
-'''
-    length = len(students)
-    for index in range(len(students)):
-        student = students[index]
-        if username == student.username:
-            current_student = student
-            prev_student = students[index - 1]
-            if index + 1 == len(students):
-                next_student = students[0]
-            else:
-                next_student = students[index + 1]
-'''
-
-
-'''
-@app.route('/')
-def display_homepage():
-    return 'Hello'
-
-
-
-if __name__ == '__main__':
-    app.run(debug=True)
-#
-#@app.route('/completed_files/<file>')
-#def uploaded_file(file):
-#    return render_template('base.html', file=file)
-
-#@app.route('/completed_files/<file>')
-#def send_file(file):
-#    return send_from_directory('completed_files', file)
-
-
-'''
 
 
 if __name__ == "__main__":
