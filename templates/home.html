@@ -1,13 +1,54 @@
 <!DOCTYPE html>
 <html lang="en">
+
+<style>
+
+#title {
+font-family: Georgia, serif;
+text-align: center;
+color: green;
+font-size: 70px;
+}
+body {
+
+}
+#filestitle {
+font-family: Georgia, serif;
+font-size: 30px;
+color: rgb(153, 0, 0);
+}
+
+#filelinks:hover,
+{
+text-decoration: none;
+color: black;
+font-family: Georgia, serif;
+font-size: 20px;
+
+}
+
+</style>
+
 <head>
     <meta charset="UTF-8">
+
     <title>SCL Database</title>
 </head>
 <body>
-    {% for file in text_file_names %}
-    <p><a href="/{{ file }}">{{ file }}</a></p>
-    {% endfor %}
+<h1 id="title">
+    SCL Database
+</h1>
+
+    <div>
+        <p id="filestitle">
+            <b>Uploaded Files:</b>
+        </p>
+        {% for file in text_file_names %}
+        <p>
+            <a id="filelinks" href="/{{ file }}">{{ file }}</a>
+        </p>
+        {% endfor %}
+    </div>
 </body>
 </html>
 
