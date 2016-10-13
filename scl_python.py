@@ -130,12 +130,6 @@ def get_metadata():
 @app.route('/<file_name>')
 def display_images(file_name):
     get_metadata()
-    image_file_names = get_img_filenames()
-    text_file_names = get_txt_filenames()
-    nested_list = list(zip(image_file_names, text_file_names))
-    length = len(nested_list)
-    for index in range(length):
-        pairing = nested_list[index]
     file_number = re.search('document(.*)image', file_name)
     file_number = file_number.group(1)
     image_file_name = 'document' + str(file_number) + 'image.jpg'

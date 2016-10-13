@@ -1,0 +1,29 @@
+
+.resources
+{
+    float: left;
+    max-width: 500px;
+    max-height: 647px;
+    margin-left: 10px;
+    margin-top: 10px;
+    padding: 5px;
+    border: 2px solid black;
+    overflow: auto;
+
+}
+
+
+.text
+{
+    float: left;
+    max-width: 500px;
+    max-height: 647px;
+    margin-left: 10px;
+    margin-top: 10px;
+    padding: 5px;
+    border: 2px solid black;
+    overflow: auto;
+}
+
+
+<div style="height:120px;width:120px;border:1px solid #ccc;font:16px/26px Georgia, Garamond, Serif;overflow:auto;">

@@ -3,29 +3,41 @@
 <head>
     <meta charset="UTF-8">
     <title>Image and OCR Scanned Text</title>
+    <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='style.css') }}"/>
 </head>
 <body>
-    <img src="/completed_files/{{ image_file_name }}">
-    <p>{{ txt_content }}</p>
-    <p>
-        <iframe src="/completed_text_files/{{ text_file_name }}"></iframe>
-    </p>
-<div class="metadata">
-<form>
-    Box Number:<br>
-    <input type="text" name="boxnum"><br>
-    File Name:<br>
-    <input type="text" name="filename"><br>
-    Date Added (mm/dd/yyyy):<br>
-    <input type="text" name="dateadded"><br>
-    Name of Uploader (first and last):<br>
-    <input type="text" name="uploader"><br>
-    Comments/Notes About Item:<br>
-    <input type="text" name="comments"><br>
+<br class=container">
+    <div class="resources">
+        <img style="max-width: 500px; height: auto; " src="/completed_files/{{ image_file_name }}" />
+    </div>
 
-    <input type="submit" value="Submit">
-</form>
+    <div class="resources">
+        <div id="text">
+        <p>{{ txt_content }}</p>
+        </div>
+    </div>
+</br>
+    <div class="resources">
+        <div class="metadata">
+            <form>
+                Box Number:<br>
+                <input type="text" name="boxnum"><br>
+                File Name:<br>
+                <input type="text" name="filename"><br>
+                Date Added (mm/dd/yyyy):<br>
+                <input type="text" name="dateadded"><br>
+                Name of Uploader (first and last):<br>
+                <input type="text" name="uploader"><br>
+                Comments/Notes About Item:<br>
+                <input type="text" name="comments"><br>
+
+                <input type="submit" value="Submit">
+            </form>
+        </div>
+    </div>
 </div>
+
+
 </body>
 </html>
 
