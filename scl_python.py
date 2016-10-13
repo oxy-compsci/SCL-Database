@@ -118,8 +118,9 @@ def display_homepage():
 
 # get metadata isolates the input text from the metadata fields entered by the user, then organizes it into a
 # dictionary, then writes the information in the dictionary in the 'metadata.txt' file
-def get_metadata():
+def get_metadata(file_name):
     parameters = request.args.to_dict()
+    parameters['file_name'] = file_name
     with open('metadata.txt', 'a') as input_file:
         for k, v in parameters.items():
             line = '{}, {}'.format(k, v)
@@ -129,7 +130,7 @@ def get_metadata():
 
 @app.route('/<file_name>')
 def display_images(file_name):
-    get_metadata()
+    get_metadata(file_name)
     image_file_names = get_img_filenames()
     text_file_names = get_txt_filenames()
     nested_list = list(zip(image_file_names, text_file_names))
