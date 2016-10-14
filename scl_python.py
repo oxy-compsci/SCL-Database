@@ -121,11 +121,31 @@ def display_homepage():
 def get_metadata(file_name):
     parameters = request.args.to_dict()
     parameters['file_name'] = file_name
+
+def write_dictionary(file_name):
+    parameters = get_metadata(file_name)
     with open('metadata.txt', 'a') as input_file:
         for k, v in parameters.items():
             line = '{}, {}'.format(k, v)
             print(line, file=input_file)
 # FIXME: how will we know when someone has already added metadata? Can we add an override capability/append capability?
+
+def return_metamatch(file_name):
+    metadata_dictionary = get_metadata(file_name)
+    nested_list = []
+    for file_name in metadata:
+        if file_name is True:
+
+
+            nested_list.append()
+        else:
+            print("{} cannot be found")
+    return nested_list
+
+
+
+
+
 
 
 @app.route('/<file_name>')
