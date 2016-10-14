@@ -110,20 +110,23 @@ def get_txt_filenames():
     return text_file_names
 
 
-
-
 @app.route('/')
 def display_homepage():
     return render_template('home.html', text_file_names=get_img_filenames())
 
 # get metadata isolates the input text from the metadata fields entered by the user, then organizes it into a
 # dictionary, then writes the information in the dictionary in the 'metadata.txt' file
-def get_metadata(file_name):
-    parameters = request.args.to_dict()
-    parameters['file_name'] = file_name
+def get_small_dict(file_name):
+    small_dict = request.args.to_dict()
+
+def get_big_dict(file_name):
+    small_dict = get_small_dict(file_name)
+    big_dict = {}
+    big_dict['file_name'] = small_dict
+    return big_dict
 
 def write_dictionary(file_name):
-    parameters = get_metadata(file_name)
+    parameters = get_big_dict(file_name)
     with open('metadata.txt', 'a') as input_file:
         for k, v in parameters.items():
             line = '{}, {}'.format(k, v)
@@ -131,13 +134,11 @@ def write_dictionary(file_name):
 # FIXME: how will we know when someone has already added metadata? Can we add an override capability/append capability?
 
 def return_metamatch(file_name):
-    metadata_dictionary = get_metadata(file_name)
+    parameters = get_big_dict(file_name) #this should be big_dict
     nested_list = []
-    for file_name in metadata:
+    for file_name in parameters:
         if file_name is True:
-
-
-            nested_list.append()
+            nested_list.append(list(file_name.values()))
         else:
             print("{} cannot be found")
     return nested_list
