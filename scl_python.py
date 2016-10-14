@@ -163,9 +163,12 @@ def display_images(file_name):
     image_file_name = 'document' + str(file_number) + 'image.jpg'
     text_file_name = 'document' + str(file_number) + 'text'
     text_location = "completed_text_files/" + text_file_name
+    metadata_location = "metadata.txt"
     with open(text_location, "r") as f:
         txt_content = f.read()
-    return render_template('image.html', image_file_name=image_file_name, text_file_name=text_file_name, txt_content=txt_content)
+    with open(metadata_location, "r") as f:
+        metadata_content = f.read()
+    return render_template('image.html', image_file_name=image_file_name, text_file_name=text_file_name, txt_content=txt_content, metadata_content=metadata_content)
 
 
 
