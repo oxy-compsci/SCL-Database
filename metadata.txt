@@ -1,5 +1,0 @@
-filename, caltestfilename
-boxnum, caltestbox
-uploader, caltestname
-comments, caltestnotes
-dateadded, caltestdate
