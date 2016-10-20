@@ -87,6 +87,7 @@ run_image(Loading_zone)
 # get_img_filenames creates a list of all the file names beginning with the word "document" within the "completed_files"
 # folder
 
+
 def get_img_filenames():
     file_names = []
     path = "completed_files"
@@ -113,51 +114,42 @@ def get_txt_filenames():
 def display_homepage():
     return render_template('home.html', text_file_names=get_img_filenames())
 
-'''
+
 # get metadata isolates the input text from the metadata fields entered by the user, then organizes it into a
 # dictionary, then writes the information in the dictionary in the 'metadata.txt' file
-def get_small_dict(file_name):
-    small_dict = request.args.to_dict()
-    print("Printing small_dict: {}".format(small_dict))
-    return small_dict
-
-def get_big_dict(file_name):
-    small_dict = get_small_dict(file_name)
-    big_dict = {}
-    big_dict['file_name'] = small_dict
-    return big_dict
-
-def write_dictionary(file_name):
-    parameters = get_big_dict(file_name)
+'''
+def get_metadata(file_name):
+    parameters = request.args.to_dict()
+    parameters['file_name'] = file_name
     with open('metadata.txt', 'a') as input_file:
         for k, v in parameters.items():
             line = '{}, {}'.format(k, v)
             print(line, file=input_file)
-# FIXME: how will we know when someone has already added metadata? Can we add an override capability/append capability?
-
-def return_metamatch(file_name):
-    parameters = get_big_dict(file_name) #this should be big_dict
-    nested_list = []
-    for file_name in parameters:
-        if file_name is True:
-            nested_list.append(list(file_name.values()))
-        else:
-            print("file named, {}, cannot be found in metadata".format(file_name))
-    return nested_list
 '''
+
+def write_metadata_file(file_name):
+    file = open('metadata.txt', 'a')
+    file.write('\n\nFile Name:{}\nBox Number: []\nDate Added (mm/dd/yyyy): []\nName of Uploader (Last, First): []'
+               '\nComments/Notes about File: []'.format(str(file_name)))
+    file.close()
 
 @app.route('/<file_name>')
 def display_images(file_name):
-    print("this is the filename: {}".format(file_name))
+    image_file_names = get_img_filenames()
+    text_file_names = get_txt_filenames()
+    nested_list = list(zip(image_file_names, text_file_names))
+    length = len(nested_list)
+    for index in range(length):
+        pairing = nested_list[index]
     file_number = re.search('document(.*)image', file_name)
-    print("Printing file number: {}".format(file_number))
     file_number = file_number.group(1)
     image_file_name = 'document' + str(file_number) + 'image.jpg'
     text_file_name = 'document' + str(file_number) + 'text'
     text_location = "completed_text_files/" + text_file_name
     with open(text_location, "r") as f:
         txt_content = f.read()
-    return render_template('image.html', image_file_name=image_file_name, txt_content=txt_content)
+    write_metadata_file(file_name)
+    return render_template('image.html', image_file_name=image_file_name, text_file_name=text_file_name, txt_content=txt_content)
 
 
 
