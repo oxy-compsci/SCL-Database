@@ -57,6 +57,20 @@ def text_file_creator(string, filename, path):
     new_file = open(os.path.join(path, filename), "w")
     new_file.write(string)
 
+def write_metadata_file(file_name):
+    file = open('metadata.txt', 'a')
+    file.write('\n\nFile Name: {}\nBox Number: []\nDate Added (mm/dd/yyyy): []\nName of Uploader (Last, First): []'
+               '\nComments/Notes about File: []'.format(str(file_name)))
+    file.close()
+
+# this function determines the name of a file being added to any folder
+def next_file_name():
+    metadata = open('metadata.txt', 'r')
+    lines = metadata.read()
+    what_we_want = re.search('File Counter = (.*)\n', lines)
+    what_we_really_want = what_we_want.group(1)
+    print(what_we_really_want)
+next_file_name()
 
 # run_image combines the above functions, it takes a folder, if that folder has more than one file in it, the function
 # loops through each file. If that file is a JPEG, PNG, GIF or TIF image, the image will be run through OCR, and the
@@ -72,11 +86,14 @@ def run_image(path):
                 filename = os.path.join(path, filename)
                 count += 1
                 text_name = "document" + str(count) + "text"
-                image_rename = os.path.join(Dest_path, "document" + str(count) + "image")
+                print('this is the text name: {}'.format(text_name))
+                image_title = "document" + str(count) + "image"
+                image_file_dest = os.path.join(Dest_path, image_title)
+                write_metadata_file(image_title)
                 text = ocr_extract(filename)
                 text_file_creator(text, text_name, Text_path)
-                print("renaming {} to {}".format(filename, image_rename))
-                os.rename(filename, image_rename)
+                print("renaming {} to {}".format(filename, image_file_dest))
+                os.rename(filename, image_file_dest)
             else:
                 print("{} is not an image file".format(filename))
 
@@ -127,28 +144,21 @@ def get_metadata(file_name):
             print(line, file=input_file)
 '''
 
-def write_metadata_file(file_name):
-    file = open('metadata.txt', 'a')
-    file.write('\n\nFile Name:{}\nBox Number: []\nDate Added (mm/dd/yyyy): []\nName of Uploader (Last, First): []'
-               '\nComments/Notes about File: []'.format(str(file_name)))
-    file.close()
+
+
+# when there is nothing following the backslash, this still runs and shouldn't (replaces <file_name> with favicon.ico)
 
 @app.route('/<file_name>')
 def display_images(file_name):
-    image_file_names = get_img_filenames()
-    text_file_names = get_txt_filenames()
-    nested_list = list(zip(image_file_names, text_file_names))
-    length = len(nested_list)
-    for index in range(length):
-        pairing = nested_list[index]
+    print('{} is the filename in app.route'.format(file_name))
     file_number = re.search('document(.*)image', file_name)
+    print('{} is the re.search result'.format(file_number))
     file_number = file_number.group(1)
     image_file_name = 'document' + str(file_number) + 'image.jpg'
     text_file_name = 'document' + str(file_number) + 'text'
     text_location = "completed_text_files/" + text_file_name
     with open(text_location, "r") as f:
         txt_content = f.read()
-    write_metadata_file(file_name)
     return render_template('image.html', image_file_name=image_file_name, text_file_name=text_file_name, txt_content=txt_content)
 
 

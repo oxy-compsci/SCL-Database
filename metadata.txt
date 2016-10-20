@@ -1,6 +1,8 @@
+Instructions go here!
+File Counter = 1
 
 
-File Name:document0image
+File Name: document0image
 Box Number: []
 Date Added (mm/dd/yyyy): []
 Name of Uploader (Last, First): []
