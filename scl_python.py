@@ -110,14 +110,14 @@ def get_txt_filenames():
     return text_file_names
 
 
-
-
 @app.route('/')
 def display_homepage():
     return render_template('home.html', text_file_names=get_img_filenames())
 
+
 # get metadata isolates the input text from the metadata fields entered by the user, then organizes it into a
 # dictionary, then writes the information in the dictionary in the 'metadata.txt' file
+'''
 def get_metadata(file_name):
     parameters = request.args.to_dict()
     parameters['file_name'] = file_name
@@ -125,12 +125,16 @@ def get_metadata(file_name):
         for k, v in parameters.items():
             line = '{}, {}'.format(k, v)
             print(line, file=input_file)
-# FIXME: how will we know when someone has already added metadata? Can we add an override capability/append capability?
+'''
 
+def write_metadata_file(file_name):
+    file = open('metadata.txt', 'a')
+    file.write('\n\nFile Name:{}\nBox Number: []\nDate Added (mm/dd/yyyy): []\nName of Uploader (Last, First): []'
+               '\nComments/Notes about File: []'.format(str(file_name)))
+    file.close()
 
 @app.route('/<file_name>')
 def display_images(file_name):
-    get_metadata(file_name)
     image_file_names = get_img_filenames()
     text_file_names = get_txt_filenames()
     nested_list = list(zip(image_file_names, text_file_names))
@@ -144,6 +148,7 @@ def display_images(file_name):
     text_location = "completed_text_files/" + text_file_name
     with open(text_location, "r") as f:
         txt_content = f.read()
+    write_metadata_file(file_name)
     return render_template('image.html', image_file_name=image_file_name, text_file_name=text_file_name, txt_content=txt_content)
 
 
