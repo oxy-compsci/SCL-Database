@@ -87,7 +87,6 @@ run_image(Loading_zone)
 # get_img_filenames creates a list of all the file names beginning with the word "document" within the "completed_files"
 # folder
 
-
 def get_img_filenames():
     file_names = []
     path = "completed_files"
@@ -114,10 +113,13 @@ def get_txt_filenames():
 def display_homepage():
     return render_template('home.html', text_file_names=get_img_filenames())
 
+'''
 # get metadata isolates the input text from the metadata fields entered by the user, then organizes it into a
 # dictionary, then writes the information in the dictionary in the 'metadata.txt' file
 def get_small_dict(file_name):
     small_dict = request.args.to_dict()
+    print("Printing small_dict: {}".format(small_dict))
+    return small_dict
 
 def get_big_dict(file_name):
     small_dict = get_small_dict(file_name)
@@ -140,29 +142,22 @@ def return_metamatch(file_name):
         if file_name is True:
             nested_list.append(list(file_name.values()))
         else:
-            print("{} cannot be found")
+            print("file named, {}, cannot be found in metadata".format(file_name))
     return nested_list
-
-
-
-
-
-
+'''
 
 @app.route('/<file_name>')
 def display_images(file_name):
-    get_metadata(file_name)
+    print("this is the filename: {}".format(file_name))
     file_number = re.search('document(.*)image', file_name)
+    print("Printing file number: {}".format(file_number))
     file_number = file_number.group(1)
     image_file_name = 'document' + str(file_number) + 'image.jpg'
     text_file_name = 'document' + str(file_number) + 'text'
     text_location = "completed_text_files/" + text_file_name
-    metadata_location = "metadata.txt"
     with open(text_location, "r") as f:
         txt_content = f.read()
-    with open(metadata_location, "r") as f:
-        metadata_content = f.read()
-    return render_template('image.html', image_file_name=image_file_name, text_file_name=text_file_name, txt_content=txt_content, metadata_content=metadata_content)
+    return render_template('image.html', image_file_name=image_file_name, txt_content=txt_content)
 
 
 
