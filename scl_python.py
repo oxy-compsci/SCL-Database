@@ -38,21 +38,13 @@ def text_file_creator(string, filename, path):
 # ADDS A SET OF METADATA CATEGORIES FOR A FILENAME
 def write_metadata_file(file_name):
     file = open('metadata.txt', 'a')
-    file.write('\n\nFile Name: [{}]\nBox Number: []\nDate Added (mm/dd/yyyy): []\nName of Uploader (Last, First): []'
-               '\nComments/Notes about File: []'.format(str(file_name)))
+    file.write('\n\nFile Name: [{}]'
+               '\nBox Number: []'
+               '\nDate Added (mm/dd/yyyy): []'
+               '\nName of Uploader (Last, First): []'
+               '\nComments/Notes about File: []'
+               .format(str(file_name)))
     file.close()
-
-# POSSIBLE NEW SOLUTION IN FUNCTION BELOW
-# ------------------------------------------
-# # RETURNS FILE COUNT LOCATED IN METADATA
-# def next_file_number():
-#     metadata = open('metadata.txt', 'r')
-#     metastring = metadata.read()
-#     find_counter = re.search('File Counter = (.*)\n', metastring)
-#     filenumber = find_counter.group(1)
-#     return filenumber
-# next_file_number()
-# ------------------------------------------
 
 # RETURNS FILE COUNT LOCATED IN FILECOUNT.TXT
 def check_file_number():
@@ -81,47 +73,41 @@ def metacheck(filenum):
 
 # FINDS METADATA FOR FILE NAME, RETURNS NESTED LIST OF CATEGORY INPUTS
 def pull_metadata(filenum):
+    lines = []
     if metacheck(filenum) is True:
         metadata = open('metadata.txt', 'r')
         metastring = metadata.read()
         filenum = str(filenum)
         find_filename = metastring.find('document' + filenum + 'image')
-        print(find_filename)
         current_location = find_filename - 12
-        lines = []
-        open_index = []
-        close_index = []
-        for char in metastring[current_location:]:
-            if len(lines) <= 5:
-                # print('loop is running over character: {}'.format(char))
-                if char is '[':
-                    print('I found an open bracket!')
-                    print('i promise {} is an opening bracket'.format(char))
-                    open_index.append(metastring.index(char))
-                    print(open_index)
-
+        string = ''
+        record = False
+        category_count = 0
+        for index, char in enumerate(metastring[current_location:]):
+            if category_count < 5:
                 if char is ']':
-                    print('I found the closed bracket')
-                    print('i promise {} is a closing bracket'.format(char))
-                    close_index.append(metastring.index(char))
-                    print(close_index)
-                    lines.append(metastring[open_index[0]:close_index[0]])
-                    current_location += close_index[0] + 1
+                    record = False
+                    lines.append(string)
+                    string = ''
+                    category_count += 1
+                if record is True:
+                    string = string + char
+                if char is '[':
+                    record = True
+    return lines
 
-        return(lines)
-print(pull_metadata(12))
-
-
-
-
-
-
-        # while len(lines) <= 5:
-        #     metastring.splitlines[current_line:]()
-
-
-print(pull_metadata('12'))
-
+# ZIPS METADATA CATEGORIES AND RESPECTIVE METADATA INTO NESTED LISTS
+def zip_names(file_number):
+    categories = ['File Name:',
+                  'Box Number:',
+                  'Date Added (mm/dd/yyyy):',
+                  'Name of Uploader (Last, First):',
+                  'Notes/Comments:']
+    entries = pull_metadata(file_number)
+    info_list = zip(categories, entries)
+    for i in info_list:
+        print(i)
+    return info_list
 
 # RETURNS LIST OF FILE NAMES IN COMPLETED FILES FOLDER
 def get_img_filenames():
@@ -162,7 +148,7 @@ def run_image(path):
             else:
                 print("{} is not an image file".format(filename))
 
-# VISITING THE HOMEPAGE RUNS SCRIPT ON LOADING ZONE
+# VISITING THE HOMEPAGE RUNS ALL OF THE IMAGE-->OCR CODE ON FILES IN THE LOADING ZONE
 @app.route('/')
 def display_homepage():
     run_image(Loading_zone)
@@ -170,7 +156,7 @@ def display_homepage():
 
 # TO FIX:
 # when there is nothing following the backslash, this still runs and shouldn't (replaces <file_name> with favicon.ico)
-@app.route('/<file_name>')
+@app.route('/scl/<file_name>')
 def display_images(file_name):
     file_number = re.search('document(.*)image', file_name)
     file_number = file_number.group(1)
@@ -179,16 +165,16 @@ def display_images(file_name):
     text_location = "completed_text_files/" + text_file_name
     with open(text_location, "r") as f:
         txt_content = f.read()
-    return render_template('image.html', image_file_name=image_file_name, text_file_name=text_file_name, txt_content=txt_content)
+    metadata = pull_metadata(file_number)
+    return render_template('image.html',
+                           image_file_name=image_file_name,
+                           text_file_name=text_file_name,
+                           txt_content=txt_content,
+                           metadata=metadata)
 
 @app.route('/completed_files/<file_name>')
 def image_file(file_name):
     return send_from_directory('completed_files', file_name)
-
-@app.route('/completed_text_files/<file_name>')
-def text_file(file_name):
-    return send_from_directory('completed_text_files', file_name)
-
 
 if __name__ == "__main__":
     app.run(debug=True)
