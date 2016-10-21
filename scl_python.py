@@ -1,6 +1,3 @@
-import os
-import re
-
 try:
     import Image
 except ImportError:
@@ -10,31 +7,19 @@ import pytesseract
 import os, sys
 from os import listdir
 from os.path import isfile, join
-
-import shutil
-
-from os import chdir
-from os.path import dirname, realpath
-import random
+import re
 
 from flask import Flask, render_template, send_from_directory, request
-import re
+
 
 app = Flask(__name__)
 
-
-# Loading_zone is where image files are to uploaded, Text_path is a folder to save completed OCR text files, and
-# Dest_path is the folder for the images after they are run through OCR.
-
-
+# FOLDER PATHS
 Loading_zone = "loading_zone"
 Text_path = "completed_text_files"
 Dest_path = "completed_files"
 
-
-# file_check takes a given file as an argument, returns false if that folder contains less than or equal to one file,
-# otherwise, returns true.
-
+# CHECKS IF MORE THAN ONE FILE EXISTS IN A FOLDER
 def file_check(path):
     files_no_folders = [f for f in listdir(path) if isfile(join(path, f))]
     if len(files_no_folders) <= 1:
@@ -42,40 +27,53 @@ def file_check(path):
     else:
         return True
 
-
-# ocr_extract takes an (image) file, runs it through OCR, and returns a string of text
-
+# IMAGE --> OCR STRING
 def ocr_extract(file):
     ocr_text = pytesseract.image_to_string(Image.open(file))
     return ocr_text
 
-
-# text_file_creator takes a string of text, a filename and a path (folder) and saves the string into the designated
-# with the designated filename
-
+# CREATES NEW .TXT FILE WITH STRING, FILENAME, AND PATH
 def text_file_creator(string, filename, path):
     new_file = open(os.path.join(path, filename), "w")
     new_file.write(string)
 
+# [ENTER DESCRIPTION HERE]
 def write_metadata_file(file_name):
     file = open('metadata.txt', 'a')
     file.write('\n\nFile Name: {}\nBox Number: []\nDate Added (mm/dd/yyyy): []\nName of Uploader (Last, First): []'
                '\nComments/Notes about File: []'.format(str(file_name)))
     file.close()
 
-# this function determines the name of a file being added to any folder
+# RETURNS FILE COUNT LOCATED IN METADATA
 def next_file_name():
     metadata = open('metadata.txt', 'r')
-    lines = metadata.read()
-    what_we_want = re.search('File Counter = (.*)\n', lines)
-    what_we_really_want = what_we_want.group(1)
-    print(what_we_really_want)
+    metastring = metadata.read()
+    find_counter = re.search('File Counter = (.*)\n', metastring)
+    filenumber = find_counter.group(1)
+    return filenumber
 next_file_name()
 
-# run_image combines the above functions, it takes a folder, if that folder has more than one file in it, the function
-# loops through each file. If that file is a JPEG, PNG, GIF or TIF image, the image will be run through OCR, and the
-# associated text file and the original image will be saved to Dest_path, or the completed files folder in Python.
+# RETURNS LIST OF FILE NAMES IN COMPLETED FILES FOLDER
+def get_img_filenames():
+    file_names = []
+    dirs = os.listdir(Dest_path)
+    for file in dirs:
+        if file.startswith('document'):
+            file_names.append(file)
+    return file_names
 
+# RETURNS LIST OF FILE NAMES IN COMPLETED TEXT FILES FOLDER
+def get_txt_filenames():
+    text_file_names = []
+    dirs = os.listdir(Text_path)
+    for file in dirs:
+        if file.startswith('document'):
+            text_file_names.append(file)
+    return text_file_names
+
+# RUNS IMAGE FILES LOCATED IN LOADING_ZONE THROUGH OCR EXTRACT,
+# USES TEXT_FILE_CREATOR TO CREATE TEXT FILES FOR OCR STRINGS,
+# MOVES COMPLETED IMAGES AND RESPECTIVE TEXT FILES TO PROPER FOLDERS
 def run_image(path):
     count = -1
     if file_check(path):
@@ -97,62 +95,17 @@ def run_image(path):
             else:
                 print("{} is not an image file".format(filename))
 
-
-run_image(Loading_zone)
-
-
-# get_img_filenames creates a list of all the file names beginning with the word "document" within the "completed_files"
-# folder
-
-
-def get_img_filenames():
-    file_names = []
-    path = "completed_files"
-    dirs = os.listdir(path)
-    for file in dirs:
-        if file.startswith('document'):
-            file_names.append(file)
-    return file_names
-
-
-# get_txt_filenames creates a list of all the file names beginning with the word "document" within the
-# "completed_text_files" folder
-
-def get_txt_filenames():
-    text_file_names = []
-    dirs = os.listdir(Text_path)
-    for file in dirs:
-        if file.startswith('document'):
-            text_file_names.append(file)
-    return text_file_names
-
-
+# VISITING THE HOMEPAGE RUNS SCRIPT ON LOADING ZONE
 @app.route('/')
 def display_homepage():
+    run_image(Loading_zone)
     return render_template('home.html', text_file_names=get_img_filenames())
 
-
-# get metadata isolates the input text from the metadata fields entered by the user, then organizes it into a
-# dictionary, then writes the information in the dictionary in the 'metadata.txt' file
-'''
-def get_metadata(file_name):
-    parameters = request.args.to_dict()
-    parameters['file_name'] = file_name
-    with open('metadata.txt', 'a') as input_file:
-        for k, v in parameters.items():
-            line = '{}, {}'.format(k, v)
-            print(line, file=input_file)
-'''
-
-
-
+# TO FIX:
 # when there is nothing following the backslash, this still runs and shouldn't (replaces <file_name> with favicon.ico)
-
 @app.route('/<file_name>')
 def display_images(file_name):
-    print('{} is the filename in app.route'.format(file_name))
     file_number = re.search('document(.*)image', file_name)
-    print('{} is the re.search result'.format(file_number))
     file_number = file_number.group(1)
     image_file_name = 'document' + str(file_number) + 'image.jpg'
     text_file_name = 'document' + str(file_number) + 'text'
@@ -161,12 +114,9 @@ def display_images(file_name):
         txt_content = f.read()
     return render_template('image.html', image_file_name=image_file_name, text_file_name=text_file_name, txt_content=txt_content)
 
-
-
 @app.route('/completed_files/<file_name>')
 def image_file(file_name):
     return send_from_directory('completed_files', file_name)
-
 
 @app.route('/completed_text_files/<file_name>')
 def text_file(file_name):
