@@ -106,9 +106,10 @@ def zip_names(file_number):
                   'Notes/Comments:']
     entries = pull_metadata(file_number)
     info_list = zip(categories, entries)
-    for i in info_list:
-        print(i)
-    return info_list
+    list = []
+    for each in info_list:
+        list.append(each)
+    return list
 
 # RETURNS LIST OF FILE NAMES IN COMPLETED FILES FOLDER
 def get_img_filenames():
@@ -167,7 +168,7 @@ def display_images(file_name):
     text_location = "completed_text_files/" + text_file_name
     with open(text_location, "r") as f:
         txt_content = f.read()
-    metadata = pull_metadata(file_number)
+    metadata = zip_names(file_number)
     return render_template('image.html',
                            image_file_name=image_file_name,
                            text_file_name=text_file_name,
