@@ -2,6 +2,7 @@ try:
     import Image
 except ImportError:
     from PIL import Image
+import imghdr
 import os
 import re
 from os import listdir
@@ -130,12 +131,15 @@ def get_txt_filenames():
 # RUNS IMAGE FILES LOCATED IN LOADING_ZONE THROUGH OCR EXTRACT,
 # USES TEXT_FILE_CREATOR TO CREATE TEXT FILES FOR OCR STRINGS,
 # MOVES COMPLETED IMAGES AND RESPECTIVE TEXT FILES TO PROPER FOLDERS
-def run_image(path):
-    if file_check(path):
-        for filename in os.listdir(path):
-            if filename.endswith(".jpg" or ".jpeg" or ".png" or ".gif" or ".tif"):
-                print("{} is an image file".format(filename))
-                filename = os.path.join(path, filename)
+def run_image():
+    if file_check(Loading_zone):
+        for filename in os.listdir(Loading_zone):
+            filename_path = os.path.join(Loading_zone, filename)
+            image_type = imghdr.what(filename_path)
+            if image_type:
+            # if filename.endswith(".jpg" or ".jpeg" or ".png" or ".gif" or ".tif"):
+                print("{} is a {} file".format(filename, image_type))
+                filename = os.path.join(Loading_zone, filename)
                 count = check_file_number()
                 text_name = "document" + str(count) + "text"
                 image_title = "document" + str(count) + "image"
@@ -151,11 +155,9 @@ def run_image(path):
 # VISITING THE HOMEPAGE RUNS ALL OF THE IMAGE-->OCR CODE ON FILES IN THE LOADING ZONE
 @app.route('/')
 def display_homepage():
-    run_image(Loading_zone)
+    run_image()
     return render_template('home.html', text_file_names=get_img_filenames())
 
-# TO FIX:
-# when there is nothing following the backslash, this still runs and shouldn't (replaces <file_name> with favicon.ico)
 @app.route('/scl/<file_name>')
 def display_images(file_name):
     file_number = re.search('document(.*)image', file_name)
