@@ -108,6 +108,7 @@ def pull_metadata(filenum):
                     lines.append(metastring[open_index[0]:close_index[0]])
                     current_location += close_index[0] + 1
 
+
         return(lines)
 print(pull_metadata(12))
 
@@ -192,3 +193,4 @@ def text_file(file_name):
 
 if __name__ == "__main__":
     app.run(debug=True)
+
