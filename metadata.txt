@@ -1,73 +1,49 @@
 Instructions go here!
 ——————————————————————————————————
 
-File Name: document1image
+File Name: [document0image]
 Box Number: []
 Date Added (mm/dd/yyyy): []
 Name of Uploader (Last, First): []
 Comments/Notes about File: []
 
-File Name: document1image
+File Name: [document1image]
 Box Number: []
 Date Added (mm/dd/yyyy): []
 Name of Uploader (Last, First): []
 Comments/Notes about File: []
 
-File Name: document0image
+File Name: [document2image]
 Box Number: []
 Date Added (mm/dd/yyyy): []
 Name of Uploader (Last, First): []
 Comments/Notes about File: []
 
-File Name: documentimage
+File Name: [document3image]
 Box Number: []
 Date Added (mm/dd/yyyy): []
 Name of Uploader (Last, First): []
 Comments/Notes about File: []
 
-File Name: documentimage
+File Name: [document4image]
 Box Number: []
 Date Added (mm/dd/yyyy): []
 Name of Uploader (Last, First): []
 Comments/Notes about File: []
 
-File Name: document0image
-Box Number: []
-Date Added (mm/dd/yyyy): []
-Name of Uploader (Last, First): []
-Comments/Notes about File: []
-
-File Name: document1image
-Box Number: []
-Date Added (mm/dd/yyyy): []
-Name of Uploader (Last, First): []
-Comments/Notes about File: []
-
-File Name: document2image
-Box Number: []
-Date Added (mm/dd/yyyy): []
-Name of Uploader (Last, First): []
-Comments/Notes about File: []
-
-File Name: document3image
-Box Number: []
-Date Added (mm/dd/yyyy): []
-Name of Uploader (Last, First): []
-Comments/Notes about File: []
-
-File Name: document4image
-Box Number: []
-Date Added (mm/dd/yyyy): []
-Name of Uploader (Last, First): []
-Comments/Notes about File: []
-
-File Name: document5image
+File Name: [document5image]
 Box Number: []
 Date Added (mm/dd/yyyy): []
 Name of Uploader (Last, First): []
 Comments/Notes about File: []
 
 File Name: [document6image]
+Box Number: []
+Date Added (mm/dd/yyyy): []
+Name of Uploader (Last, First): []
+Comments/Notes about File: []
+
+File Name: [document7image]
 Box Number: []
 Date Added (mm/dd/yyyy): []
 Name of Uploader (Last, First): []
@@ -91,18 +67,6 @@ Date Added (mm/dd/yyyy): []
 Name of Uploader (Last, First): []
 Comments/Notes about File: []
 
-File Name: [document9image]
-Box Number: []
-Date Added (mm/dd/yyyy): []
-Name of Uploader (Last, First): []
-Comments/Notes about File: []
-
-File Name: [document10image]
-Box Number: []
-Date Added (mm/dd/yyyy): []
-Name of Uploader (Last, First): []
-Comments/Notes about File: []
-
 File Name: [document10image]
 Box Number: []
 Date Added (mm/dd/yyyy): []
@@ -110,36 +74,6 @@ Name of Uploader (Last, First): []
 Comments/Notes about File: []
 
 File Name: [document11image]
-Box Number: []
-Date Added (mm/dd/yyyy): []
-Name of Uploader (Last, First): []
-Comments/Notes about File: []
-
-File Name: [document12image]
-Box Number: [I]
-Date Added (mm/dd/yyyy): [love]
-Name of Uploader (Last, First): [this]
-Comments/Notes about File: [program]
-
-File Name: [document13image]
-Box Number: []
-Date Added (mm/dd/yyyy): []
-Name of Uploader (Last, First): []
-Comments/Notes about File: []
-
-File Name: [document14image]
-Box Number: []
-Date Added (mm/dd/yyyy): []
-Name of Uploader (Last, First): []
-Comments/Notes about File: []
-
-File Name: [document15image]
-Box Number: []
-Date Added (mm/dd/yyyy): []
-Name of Uploader (Last, First): []
-Comments/Notes about File: []
-
-File Name: [document16image]
 Box Number: []
 Date Added (mm/dd/yyyy): []
 Name of Uploader (Last, First): []
