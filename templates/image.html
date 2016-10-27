@@ -3,10 +3,19 @@
 <head>
     <meta charset="UTF-8">
     <title>Image and OCR Scanned Text</title>
+    <link rel="stylesheet" href="/css/style.css">
+    <script src="/js/main.js"></script>
 </head>
 <body>
-    <img src="/completed_files/{{ image_file_name }}">
+    <div class="head green">
+        <font size="10" face="Arial"><i>Image</i></font>
+    </div>
+    <div>
+        <p style="float: left;"><img src="/completed_files/{{ image_file_name }}" height="842px" width="595px" border="1px"><p/>
+    </div>
+    <div class="text">
     <p>{{ txt_content }}</p>
+    </div>
 
     <p>
         {% for category in metadata %}
