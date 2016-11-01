@@ -10,7 +10,9 @@
 
     <p>
         {% for category in metadata %}
-        {{ category }}
+            {% for part in category %}
+                {{ part }}<br>
+            {% endfor %}
         {% endfor %}
     </p>
 </body>
