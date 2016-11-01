@@ -3,9 +3,8 @@ try:
 except ImportError:
     from PIL import Image
 import imghdr
-import os
 import re
-from os import listdir
+from os import listdir, rename
 from os.path import isfile, join
 
 import pytesseract
@@ -33,7 +32,7 @@ def ocr_extract(file):
 
 # CREATES NEW .TXT FILE WITH STRING, FILENAME, AND PATH
 def text_file_creator(string, filename, path):
-    new_file = open(os.path.join(path, filename), "w")
+    new_file = open(join(path, filename), "w")
     new_file.write(string)
 
 # ADDS A SET OF METADATA CATEGORIES FOR A FILENAME
@@ -67,10 +66,7 @@ def metacheck(filenum):
     metastring = metadata.read()
     filenum = str(filenum)
     find_filename = metastring.find('document' + filenum + 'image')
-    if find_filename is not -1:
-        return True
-    else:
-        return False
+    return (find_filename is not -1)
 
 # FINDS METADATA FOR FILE NAME, RETURNS NESTED LIST OF CATEGORY INPUTS
 def pull_metadata(filenum):
@@ -84,7 +80,7 @@ def pull_metadata(filenum):
         string = ''
         record = False
         category_count = 0
-        for index, char in enumerate(metastring[current_location:]):
+        for char in metastring[current_location:]:
             if category_count < 5:
                 if char is ']':
                     record = False
@@ -106,15 +102,15 @@ def zip_names(file_number):
                   'Notes/Comments:']
     entries = pull_metadata(file_number)
     info_list = zip(categories, entries)
-    list = []
+    result = []
     for each in info_list:
-        list.append(each)
-    return list
+        result.append(each)
+    return result
 
 # RETURNS LIST OF FILE NAMES IN COMPLETED FILES FOLDER
 def get_img_filenames():
     file_names = []
-    dirs = os.listdir(Dest_path)
+    dirs = listdir(Dest_path)
     for file in dirs:
         if file.startswith('document'):
             file_names.append(file)
@@ -123,7 +119,7 @@ def get_img_filenames():
 # RETURNS LIST OF FILE NAMES IN COMPLETED TEXT FILES FOLDER
 def get_txt_filenames():
     text_file_names = []
-    dirs = os.listdir(Text_path)
+    dirs = listdir(Text_path)
     for file in dirs:
         if file.startswith('document'):
             text_file_names.append(file)
@@ -134,21 +130,21 @@ def get_txt_filenames():
 # MOVES COMPLETED IMAGES AND RESPECTIVE TEXT FILES TO PROPER FOLDERS
 def run_image():
     if file_check(Loading_zone):
-        for filename in os.listdir(Loading_zone):
-            filename_path = os.path.join(Loading_zone, filename)
+        for filename in listdir(Loading_zone):
+            filename_path = join(Loading_zone, filename)
             image_type = imghdr.what(filename_path)
             if image_type:
             # if filename.endswith(".jpg" or ".jpeg" or ".png" or ".gif" or ".tif"):
                 print("{} is a {} file".format(filename, image_type))
-                filename = os.path.join(Loading_zone, filename)
+                filename = join(Loading_zone, filename)
                 count = check_file_number()
                 text_name = "document" + str(count) + "text"
                 image_title = "document" + str(count) + "image"
-                image_file_dest = os.path.join(Dest_path, image_title)
+                image_file_dest = join(Dest_path, image_title)
                 write_metadata_file(image_title)
                 text = ocr_extract(filename)
                 text_file_creator(text, text_name, Text_path)
-                os.rename(filename, image_file_dest)
+                rename(filename, image_file_dest)
                 count_plus_one()
             else:
                 print("{} is not an image file".format(filename))
