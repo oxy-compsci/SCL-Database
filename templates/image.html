@@ -1,5 +1,12 @@
 <!DOCTYPE html>
 <html lang="en">
+<style>
+    #metadata_title {
+
+    }
+
+
+</style>
 <head>
     <meta charset="UTF-8">
     <title>Image and OCR Scanned Text</title>
@@ -7,12 +14,11 @@
 <body>
     <img src="/completed_files/{{ image_file_name }}">
     <p>{{ txt_content }}</p>
+    <p id="metadata_title">Metadata:</p>
+    {% for category in metadata %}
+    <p> {{ category }} </p>
+    {% endfor %}
 
-    <p>
-        {% for category in metadata %}
-        {{ category }}
-        {% endfor %}
-    </p>
 </body>
 </html>
 
