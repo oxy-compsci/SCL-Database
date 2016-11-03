@@ -8,7 +8,7 @@ from os import listdir, rename
 from os.path import isfile, join
 
 import pytesseract
-from flask import Flask, render_template, send_from_directory
+from flask import Flask, render_template, send_from_directory, request
 
 app = Flask(__name__)
 
@@ -61,21 +61,19 @@ def count_plus_one():
     update.write(str(next_num))
 
 # RETURNS TRUE IF FILE NAME ALREADY EXISTS IN METADATA, FALSE IF NOT.
-def metacheck(filenum):
+def metacheck(filename):
     metadata = open('metadata.txt', 'r')
     metastring = metadata.read()
-    filenum = str(filenum)
-    find_filename = metastring.find('document' + filenum + 'image')
-    return (find_filename is not -1)
+    find_filename = metastring.find(filename)
+    return find_filename is not -1
 
-# FINDS METADATA FOR FILE NAME, RETURNS NESTED LIST OF CATEGORY INPUTS
-def pull_metadata(filenum):
+# FINDS METADATA FOR FILE NUMBER, RETURNS NESTED LIST OF CATEGORY INPUTS
+def pull_metadata(filename):
     lines = []
-    if metacheck(filenum) is True:
+    if metacheck(filename) is True:
         metadata = open('metadata.txt', 'r')
         metastring = metadata.read()
-        filenum = str(filenum)
-        find_filename = metastring.find('document' + filenum + 'image')
+        find_filename = metastring.find(filename)
         current_location = find_filename - 12
         string = ''
         record = False
@@ -93,14 +91,56 @@ def pull_metadata(filenum):
                     record = True
     return lines
 
+def get_all_metadata():
+    lines = []
+    all_lines = []
+    file = open('filecount.txt', 'r')
+    count = int(file.read())
+    counter = 0
+    index = 0
+    for x in range(count):
+        filename = 'document' + str(counter) + 'image'
+        counter += 1
+        if metacheck(filename) is True:
+            metadata = open('metadata.txt', 'r')
+            metastring = metadata.read()
+            find_filename = metastring.find(filename)
+            current_location = find_filename - 12
+            string = ''
+            record = False
+            category_count = 0
+            for char in metastring[current_location:]:
+                if category_count < 5:
+                    if char is ']':
+                        record = False
+                        lines.append(string)
+                        string = ''
+                        category_count += 1
+                        if category_count == 5:
+                            all_lines.append(lines)
+                            lines = []
+                            category_count = 0
+                    if record is True:
+                        string = string + char
+                    if char is '[':
+                        record = True
+        return all_lines
+
+def search_word(term):
+    all_lines = get_all_metadata()
+    matching = [x for x in all_lines if term in x]
+    filenames = [x[0] for x in matching]
+    return filenames
+
+
 # ZIPS METADATA CATEGORIES AND RESPECTIVE METADATA INTO NESTED LISTS
-def zip_names(file_number):
+def zip_names(filename):
     categories = ['File Name:',
                   'Box Number:',
                   'Date Added (mm/dd/yyyy):',
                   'Name of Uploader (Last, First):',
                   'Notes/Comments:']
-    entries = pull_metadata(file_number)
+    entries = pull_metadata(filename)
     info_list = zip(categories, entries)
     result = []
     for each in info_list:
@@ -125,6 +165,7 @@ def get_txt_filenames():
             text_file_names.append(file)
     return text_file_names
 
+
 # RUNS IMAGE FILES LOCATED IN LOADING_ZONE THROUGH OCR EXTRACT,
 # USES TEXT_FILE_CREATOR TO CREATE TEXT FILES FOR OCR STRINGS,
 # MOVES COMPLETED IMAGES AND RESPECTIVE TEXT FILES TO PROPER FOLDERS
@@ -138,8 +179,10 @@ def run_image():
                 print("{} is a {} file".format(filename, image_type))
                 filename = join(Loading_zone, filename)
                 count = check_file_number()
+                extension = filename.split(".",1)
+                extension = "." + extension[1]
                 text_name = "document" + str(count) + "text"
-                image_title = "document" + str(count) + "image"
+                image_title = "document" + str(count) + "image" + extension
                 image_file_dest = join(Dest_path, image_title)
                 write_metadata_file(image_title)
                 text = ocr_extract(filename)
@@ -148,12 +191,64 @@ def run_image():
                 count_plus_one()
             else:
                 print("{} is not an image file".format(filename))
+'''
+class Metadata:
+    data_count = 0
+    instance_list = []
+    metadata = open('metadata.txt', 'r')
+    metastring = metadata.read()
+
+    def __init__(self, filename, boxnumber,
+                 dateadded, uploader, comments):
+        self.filename = filename
+        self.boxnumber = boxnumber
+        self.dateadded = dateadded
+        self.uploader = uploader
+        self.comments = comments
+        Metadata.data_count += 1
+        self.instance_list.append(self)
+
+
+
+def read_metadata():
+    metastring = Metadata.metastring
+    category_count = 0
+    record = False
+    string = ''
+    lines = []
+    start_index = metastring.find('File Name:')
+    for index, character in enumerate(metastring[start_index:-1]):
+        if category_count < 5:
+            if character is ']':
+                record = False
+                lines.append(string)
+                print(lines)
+                string = ''
+                category_count += 1
+            if record is True:
+                string = string + character
+            if character is '[':
+                record = True
+        if category_count >= 5:
+            category_count = 0
+            string = ''
+            name = lines[0]
+            print(lines[0])
+            name = Metadata('boo', lines[1], lines[2], lines[3], lines[4])
+            lines = []
+
+read_metadata()
+'''
+
 
 # VISITING THE HOMEPAGE RUNS ALL OF THE IMAGE-->OCR CODE ON FILES IN THE LOADING ZONE
 @app.route('/')
 def display_homepage():
-    run_image()
-    return render_template('home.html', text_file_names=get_img_filenames())
+    search = request.args.get('search')
+    results = search_word(search)
+    print(results)
+    return render_template('home.html', text_file_names=get_img_filenames(),
+                           results=results)
 
 @app.route('/scl/<file_name>')
 def display_images(file_name):
@@ -164,7 +259,7 @@ def display_images(file_name):
     text_location = "completed_text_files/" + text_file_name
     with open(text_location, "r") as f:
         txt_content = f.read()
-    metadata = zip_names(file_number)
+    metadata = zip_names(image_file_name)
     return render_template('image.html',
                            image_file_name=image_file_name,
                            text_file_name=text_file_name,
@@ -174,6 +269,8 @@ def display_images(file_name):
 @app.route('/completed_files/<file_name>')
 def image_file(file_name):
     return send_from_directory('completed_files', file_name)
+
+run_image()
 
 if __name__ == "__main__":
     app.run(debug=True)
