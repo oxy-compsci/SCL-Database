@@ -132,7 +132,6 @@ def search_word(term):
     filenames = [x[0] for x in matching]
     return filenames
 
-
 # ZIPS METADATA CATEGORIES AND RESPECTIVE METADATA INTO NESTED LISTS
 def zip_names(filename):
     categories = ['File Name:',
@@ -170,6 +169,7 @@ def get_txt_filenames():
 # USES TEXT_FILE_CREATOR TO CREATE TEXT FILES FOR OCR STRINGS,
 # MOVES COMPLETED IMAGES AND RESPECTIVE TEXT FILES TO PROPER FOLDERS
 def run_image():
+    file_pairs = []
     if file_check(Loading_zone):
         for filename in listdir(Loading_zone):
             filename_path = join(Loading_zone, filename)
@@ -191,6 +191,33 @@ def run_image():
                 count_plus_one()
             else:
                 print("{} is not an image file".format(filename))
+
+run_image()
+
+def search_text(term):
+    filelist = []
+    filenums = []
+    for filename in listdir(Text_path):
+        filepath = join(Text_path, filename)
+        text = open(filepath, 'r')
+        ocr_text = text.read()
+        if term is not None:
+            if term in ocr_text:
+                filelist.append(filename)
+    for filename in filelist:
+        file_number = re.search('document(.*)text', filename)
+        file_number = file_number.group(1)
+        filenums.append(file_number)
+    return filenums
+
+def get_image_names_from_num(filenumbers):
+    matches = []
+    for filename in listdir(Dest_path):
+        for each in filenumbers:
+            if each in filename:
+                matches.append(filename)
+    return matches
+
 '''
 class Metadata:
     data_count = 0
@@ -240,15 +267,25 @@ def read_metadata():
 read_metadata()
 '''
 
-
 # VISITING THE HOMEPAGE RUNS ALL OF THE IMAGE-->OCR CODE ON FILES IN THE LOADING ZONE
 @app.route('/')
 def display_homepage():
     search = request.args.get('search')
-    results = search_word(search)
-    print(results)
+    meta_results = search_word(search)
+    ocr_result_nums = search_text(search)
+    ocr_results = get_image_names_from_num(ocr_result_nums)
+    meta_set = set(meta_results)
+    print("Combining search matches from metadata and OCR text files:")
+    print("meta_set: {}".format(meta_set))
+    ocr_set = set(ocr_results)
+    print("ocr_set: {}".format(ocr_set))
+    subtract_duplicates = ocr_set - meta_set
+    print("All filenames here should be distinct from any in meta_set: {}".format(subtract_duplicates))
+    results_no_duplicates = meta_results + list(subtract_duplicates)
+    print("This is the final result with no duplicates: {}".format(results_no_duplicates))
     return render_template('home.html', text_file_names=get_img_filenames(),
-                           results=results)
+                           results=results_no_duplicates)
+
 
 @app.route('/scl/<file_name>')
 def display_images(file_name):
@@ -270,7 +307,6 @@ def display_images(file_name):
 def image_file(file_name):
     return send_from_directory('completed_files', file_name)
 
-run_image()
 
 if __name__ == "__main__":
     app.run(debug=True)
