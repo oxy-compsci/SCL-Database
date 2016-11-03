@@ -1,61 +1,76 @@
 <!DOCTYPE html>
 <html lang="en">
+	<head>
 
-<style>
+        <style>
 
-#titlelib {
-font-family: Georgia, serif;
-text-align: center;
-color: green;
-font-size: 70px;
-}
-#titledatabase {
-font-family: Georgia, serif;
-text-align: center;
-color: MidnightBlue;
-font-size: 40px;
-}
-#filestitle {
-font-family: Georgia, serif;
-font-size: 30px;
-color: green;
-}
+                #titlelib {
+                    font-family: Georgia, serif;
+                    text-align: center;
+                    color: green;
+                    font-size: 70px;
+                }
+                #titledatabase {
+                    font-family: Georgia, serif;
+                    text-align: center;
+                    color: MidnightBlue;
+                    font-size: 40px;
+                }
+                #filestitle {
+                    font-family: Georgia, serif;
+                    font-size: 30px;
+                    color: green;
+                }
 
-#filelinks:hover,
-{
-text-decoration: none;
-color: black;
-font-family: Georgia, serif;
-font-size: 30px;
+                #filelinks:hover {
+                    text-decoration: none;
+                    color: black;
+                    font-family: Georgia, serif;
+                    font-size: 30px;}
 
-}
+                input[type=text] {
+                    display: inline-block;
+                    text-align: center;
+                    width: 130px;
+                    box-sizing: border-box;
+                    border: 2px solid #ccc;
+                    border-radius: 4px;
+                    font-size: 16px;
+                    background-color: white;
+                    background-position: 10px 10px;
+                    background-repeat: no-repeat;
+                    padding: 12px 20px 12px 40px;
+                    -webkit-transition: width 0.4s ease-in-out;
+                    transition: width 0.4s ease-in-out;
+                }
 
-</style>
+		</style>
+		<meta charset="UTF-8">
+		<title>
+			SCL Database
+		</title>
+	</head>
+	<body bgcolor="#D2B48C">
+		<h1 id="titlelib">
+			Southern California Library
+		</h1>
 
-<head>
-    <meta charset="UTF-8">
+		<h1 id="titledatabase">
+			<i>Online Archive Database</i>
+		</h1>
 
-    <title>SCL Database</title>
-</head>
-<body bgcolor="#d2b48c">
-<h1 id="titlelib">
-    Southern California Library
-</h1>
-<h1 id="titledatabase">
-    <i>Online Archive Database</i>
-</h1>
-
-    <div>
-        <p id="filestitle">
-            <b>Uploaded Files:</b>
-        </p>
-        {% for file in text_file_names %}
-        <p>
-            <a id="filelinks" href="/scl/{{ file }}">{{ file }}</a>
-        </p>
-        {% endfor %}
-    </div>
-</body>
+		<form>
+			<input name="search" placeholder="Search.." type="text">
+		</form>
+		{% for filename in results %} <a href="/scl/{{ filename }}" id="results">{{ filename }}</a><br>
+		{% endfor %}
+			<p id="filestitle">
+				<b>Uploaded Files:</b>
+			</p>
+			{% for file in text_file_names %}
+			<p>
+				<a id=filelinks href="/scl/{{ file }}">{{ file }}</a>
+			</p>
+			{% endfor %}
+	</body>
 </html>
-
-
