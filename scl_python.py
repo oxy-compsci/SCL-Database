@@ -29,7 +29,7 @@ def file_check(path):
 
 # This function returns True if anything besides a file is found in a path
 def folder_check(path):
-    folders = [f for f in listdir(path) if os.path.isdir(join(path, f))]
+    folders = [f for f in listdir(path) if path.isdir(join(path, f))]
     if len(folders) <= 1:
         return False
     else:
@@ -176,7 +176,7 @@ def get_txt_filenames():
 
 
 def read_metadata(folder):
-    for file in os.listdir(folder):
+    for file in listdir(folder):
         if file.endswith('.txt'):
             print('{} is a text file!'.format(file))
             metadata = open(file, 'r').read().splitlines()
@@ -197,9 +197,9 @@ def append_metadata(metadata):
 
 # this function runs the images given a specific folder
 def run_images():
-    for folder in os.listdir(Loading_zone):
+    for folder in listdir(Loading_zone):
         metadata = read_metadata(folder)
-        for file in os.listdir(folder):
+        for file in listdir(folder):
             filename_path = join(folder, file)
             image_type = imghdr.what(filename_path)
             if image_type:
@@ -210,15 +210,12 @@ def run_images():
                 image_name = 'document' + str(count) + 'image'
                 metatext = metadata_insert_filename(metadata, image_name)
                 append_metadata(metatext)
-                image_file_dest = os.path.join(Dest_path, image_name)
+                image_file_dest = path.join(Dest_path, image_name)
                 text = ocr_extract(filename)
                 text_file_creator(text, text_name, Text_path)
                 rename(filename, image_file_dest)
                 count_plus_one()
-            else:
-                print("{} is not an image file".format(filename))
 
-run_image()
 
 def search_text(term):
     filelist = []
@@ -335,4 +332,5 @@ def image_file(file_name):
 
 
 if __name__ == "__main__":
+    run_images()
     app.run(debug=True)
