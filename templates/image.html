@@ -4,61 +4,69 @@
     <meta charset="UTF-8">
     <title>Image and OCR Scanned Text</title>
 <style>
+body {
+    font-family: ‘Times New Roman’, Times, serif;
+}
 .head {
     width:100%;
     height:70px;
-    horizontal-align
+    text-align: center;
+    padding-top: 25px;
+    color: darkslategray;
+    background: rgba(108, 154, 164, .2);
 }
-.green {
-    background: linear-gradient(to right, rgba(255,0,0,0), rgba(220,220,220,1));
+h1 {
+    text-align: center;
+    font-size: 16px;
 }
+#image {
+    padding-right: 15px;
+    padding-left: 10px;
+    float:right;
+}
+.box {
+    margin-top: 17px;
+    overflow: scroll;
+    border:1px solid black;
+    float:left;
+    width: 595px;
+    height: 842px;
+    padding-left: 5px;
+    padding-right: 5px;
+}
+.metadata {
+    display: inline-block;
+    width: 100%;
+    height: 250px;
+    color: darkslategray;
+    background: rgba(108, 154, 164, .2);
+    text-align:center;
 
-background {
-    opacity: 0.5;
-    filter: alpha(opacity=50);
+}
+#metadata_title {
+    text-align: center;
+    font-size: 17px;
 }
 </style>
 </head>
-<body bgcolor="#668654">
-    <div class="head green">
-        <font size="10" face="Georgia, serif"><i>Image &emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp; OCR Text</i></font>
-
+<body bgcolor="Lightblue">
+    <div class="head">
+        <h1>{{ image_file_name }}</h1>
     </div>
-    <div>
-        <p style="float: left;"><img src="/completed_files/{{ image_file_name }}" height="842px" width="595px" border="1px"></p>
+    </br>
+    <p id="image" style="float: right;"><img src="/completed_files/{{ image_file_name }}" height="842px" width="595px" border="1px"></p>
+    <div class="box">
+    <p id="ocr_title">Optical Character Recognition Result:</p>
+    <p id="ocr" >{{ txt_content }}</p>
     </div>
-    <div>
-    <p>{{ txt_content }}</p>
-    </div>
-    <div><font size="10" face="Georgia, serif"><i>Metadata</i></font></div>
-    <p>
-        {% for category in metadata %}
+    <div class="metadata">
+    <p id="metadata_title">Metadata</p>
+    <p>{% for category in metadata %}
             {% for part in category %}
                 {{ part }}<br>
             {% endfor %}
         {% endfor %}
     </p>
+    </div>
 </body>
 </html>
-
-<!--
-<link rel=“stylesheet” type="text/css" href="{{ url_for('static', filename='static/style.css') }}" />
-<script src="/js/main.js"></script>
--->
-<!--
-<style>
-.head {
-    width:100%;
-    height:170px;
-    horizontal-align
-}
-.green {
-    background: linear-gradient(to right, rgba(255,0,0,0), rgba(53,94,59,1));
-}
-
-background {
-    opacity: 0.4;
-    filter: alpha(opacity=40);
-}
-</style>
--->
