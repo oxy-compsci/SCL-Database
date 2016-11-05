@@ -197,9 +197,8 @@ def metadata_insert_filename(metadata, filename):
 
 def append_metadata(metadata):
     # at this point, there is one copy of the metadata in Yusef's text file, and that just needs to be appended
-    for line in metadata:
-        with open('metadata.txt', 'a') as file:
-            file.write(line)
+    with open('metadata.txt', 'a') as file:
+        file.writelines("%s\n" % item for item in metadata)
 
 
 # this function runs the images given a specific folder
@@ -212,6 +211,7 @@ def run_images():
                 filename_path = os.path.join(path, file)
                 image_type = imghdr.what(filename_path)
                 file_ext = file.split(".")
+                print(file_ext)
                 if image_type:
                     print('{} is a {} file'.format(file, image_type))
                     # filename = os.path.join(folder, file)
