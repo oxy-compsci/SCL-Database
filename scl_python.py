@@ -84,6 +84,7 @@ def pull_metadata(filename):
     if metacheck(filename) is True:
         metadata = open('metadata.txt', 'r')
         metastring = metadata.read()
+        print('metastring: {}'.format(metastring))
         find_filename = metastring.find(filename)
         current_location = find_filename - 12
         string = ''
@@ -146,6 +147,7 @@ def search_word(term):
 
 # ZIPS METADATA CATEGORIES AND RESPECTIVE METADATA INTO NESTED LISTS
 def zip_names(filename):
+    print('filename: {}'.format(filename))
     categories = ['File Name:',
                   'Box Number:',
                   'Date Added (mm/dd/yyyy):',
@@ -191,6 +193,7 @@ def read_metadata(folder):
             # the filename
     return metadata
 
+
 def metadata_insert_filename(metadata, filename):
     metadata[0] = 'File Name:' + '[' + filename + ']'
     return metadata
@@ -199,6 +202,7 @@ def append_metadata(metadata):
     # at this point, there is one copy of the metadata in Yusef's text file, and that just needs to be appended
     with open('metadata.txt', 'a') as file:
         file.writelines("%s\n" % item for item in metadata)
+        file.write("\n")
 
 
 # this function runs the images given a specific folder
@@ -211,7 +215,6 @@ def run_images():
                 filename_path = os.path.join(path, file)
                 image_type = imghdr.what(filename_path)
                 file_ext = file.split(".")
-                print(file_ext)
                 if image_type:
                     print('{} is a {} file'.format(file, image_type))
                     # filename = os.path.join(folder, file)
@@ -268,7 +271,6 @@ def display_homepage():
     ocr_set = set(ocr_results)
     print("ocr_set: {}".format(ocr_set))
     subtract_duplicates = ocr_set - meta_set
-    print("All filenames here should be distinct from any in meta_set: {}".format(subtract_duplicates))
     results_no_duplicates = meta_results + list(subtract_duplicates)
     print("This is the final result with no duplicates: {}".format(results_no_duplicates))
     return render_template('home.html', text_file_names=get_img_filenames(),
@@ -279,12 +281,14 @@ def display_homepage():
 def display_images(file_name):
     file_number = re.search('document(.*)image', file_name)
     file_number = file_number.group(1)
-    image_file_name = 'document' + str(file_number) + 'image.jpg'
+    file_ext = file_name.split(".")
+    image_file_name = 'document' + str(file_number) + 'image.' + file_ext[1]
     text_file_name = 'document' + str(file_number) + 'text'
     text_location = "completed_text_files/" + text_file_name
     with open(text_location, "r") as f:
         txt_content = f.read()
     metadata = zip_names(image_file_name)
+    print('this is the metadata list: {}'.format(metadata))
     return render_template('image.html',
                            image_file_name=image_file_name,
                            text_file_name=text_file_name,
