@@ -6,6 +6,7 @@ import imghdr
 import os
 import re
 from copy import copy
+from PIL import Image
 
 import pytesseract
 

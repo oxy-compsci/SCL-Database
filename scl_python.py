@@ -41,6 +41,18 @@ def ocr_extract(file):
     ocr_text = pytesseract.image_to_string(Image.open(file))
     return ocr_text
 
+def rotate_image_ocr(file):
+    img = Image.open(file)
+    img2 = img.rotate(90)
+    img3 = img2.rotate(90)
+    img4 = img3.rotate(90)
+    ocr1 = pytesseract.image_to_string(img)
+    ocr2 = pytesseract.image_to_string(img2)
+    ocr3 = pytesseract.image_to_string(img3)
+    ocr4 = pytesseract.image_to_string(img4)
+    ocr_extractions = [ocr1, ocr2, ocr3, ocr4]
+    return ocr_extractions
+
 # CREATES NEW .TXT FILE WITH STRING, FILENAME, AND PATH
 def text_file_creator(string, filename, path):
     new_file = open(join(path, filename), "w")
@@ -225,6 +237,9 @@ def run_images():
                     append_metadata(metatext)
                     image_file_dest = os.path.join(Dest_path, image_name)
                     text = ocr_extract(filename_path)
+                    ocr_extractions = rotate_image_ocr(filename_path)
+                    # print('This is the list of rotated ocr extractions: {}'.format(ocr_extractions))
+                    # print('This is the number of things in the ocr extractions list: {}'.format(len(ocr_extractions)))
                     text_file_creator(text, text_name, Text_path)
                     rename(filename_path, image_file_dest)
                     count_plus_one()
