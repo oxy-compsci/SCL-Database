@@ -122,14 +122,45 @@ def request_new_file_number():
 def ocr_extract(path):
     return pytesseract.image_to_string(Image.open(path))
 
+def rotate_image_ocr(path):
+    img = Image.open(path)
+    img2 = img.rotate(90)
+    img3 = img2.rotate(90)
+    img4 = img3.rotate(90)
+    images = [img, img2, img3, img4]
+    ocr1 = pytesseract.image_to_string(img)
+    ocr2 = pytesseract.image_to_string(img2)
+    ocr3 = pytesseract.image_to_string(img3)
+    ocr4 = pytesseract.image_to_string(img4)
+    ocr_extractions = [ocr1, ocr2, ocr3, ocr4]
+    images_zip_ocr = [list(pair) for pair in zip(images, ocr_extractions)]
+    return images_zip_ocr
+
+def count_occurrences(path):
+    images_zip_ocr = rotate_image_ocr(path)
+    occurrences = []
+    for img_txt_pair in images_zip_ocr:
+        ocr_text = img_txt_pair[0]
+        num_occurrences = ocr_text.count('the')
+        occurrences.append(num_occurrences)
+    return occurrences
+
+def isolate_correct_img_ocr(path):
+    images_zip_ocr = rotate_image_ocr(path)
+    occurrences_of_the = count_occurrences(path)
+    index_of_pair = occurrences_of_the.index(max(occurrences_of_the))
+    img_ocr = images_zip_ocr[index_of_pair]
+    return img_ocr
+
 def run_image(file, metadata):
     # create the new Document
     doc = Document(file)
     doc.metadata = metadata
     doc.metadata[METADATA_FILE_NAME_FIELD] = doc.image_file
     # run OCR, update the doc, and write the file
-    text = ocr_extract(doc.image_path)
-    doc.text = text
+    img_ocr = isolate_correct_img_ocr(doc.image_path)
+    ocr_text = img_ocr[0]
+    doc.text = ocr_text
     doc.write_text_file()
     # update master metadata file
     with open(METADATA_FILE, "a") as file:

@@ -46,12 +46,30 @@ def rotate_image_ocr(file):
     img2 = img.rotate(90)
     img3 = img2.rotate(90)
     img4 = img3.rotate(90)
+    images = [img, img2, img3, img4]
     ocr1 = pytesseract.image_to_string(img)
     ocr2 = pytesseract.image_to_string(img2)
     ocr3 = pytesseract.image_to_string(img3)
     ocr4 = pytesseract.image_to_string(img4)
     ocr_extractions = [ocr1, ocr2, ocr3, ocr4]
-    return ocr_extractions
+    images_zip_ocr = zip(images, ocr_extractions)
+    return images_zip_ocr
+
+def count_occurences(file):
+    images_zip_ocr = rotate_image_ocr(file)
+    occurences = []
+    for img_txt_pair in images_zip_ocr:
+        ocr_text = img_txt_pair[0]
+        num_occurences = ocr_text.count('the')
+        occurences.append(num_occurences)
+    return occurences
+
+def isolate_correct_img_ocr(file):
+    images_zip_ocr = rotate_image_ocr(file)
+    occurences_of_the = count_occurences(file)
+    index_of_pair = occurences_of_the.index(max(occurences_of_the))
+    img_ocr = images_zip_ocr[index_of_pair]
+    return img_ocr
 
 # CREATES NEW .TXT FILE WITH STRING, FILENAME, AND PATH
 def text_file_creator(string, filename, path):
