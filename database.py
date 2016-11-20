@@ -123,16 +123,11 @@ def ocr_extract(path):
     return pytesseract.image_to_string(Image.open(path))
 
 def rotate_image_ocr(path):
-    img = Image.open(path)
-    img2 = img.rotate(90)
-    img3 = img2.rotate(90)
-    img4 = img3.rotate(90)
-    images = [img, img2, img3, img4]
-    ocr1 = pytesseract.image_to_string(img)
-    ocr2 = pytesseract.image_to_string(img2)
-    ocr3 = pytesseract.image_to_string(img3)
-    ocr4 = pytesseract.image_to_string(img4)
-    ocr_extractions = [ocr1, ocr2, ocr3, ocr4]
+    images = [Image.open(path)]
+    ocr_extractions = [pytesseract.image_to_string(images[-1])]
+    for i in range(3):
+        images.append(images[-1].rotate(90))
+        ocr_extractions.append(pytesseract.image_to_string(images[-1]))
     images_zip_ocr = [list(pair) for pair in zip(images, ocr_extractions)]
     return images_zip_ocr
 
