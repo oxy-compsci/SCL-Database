@@ -269,6 +269,8 @@ def search_text(term):
     filelist = []
     filenums = []
     for filename in listdir(Text_path):
+        if filename == '.DS_Store':
+            continue
         filepath = join(Text_path, filename)
         text = open(filepath, 'r')
         ocr_text = text.read()

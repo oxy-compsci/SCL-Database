@@ -124,10 +124,12 @@ def ocr_extract(path):
 
 def rotate_image_ocr(path):
     images = [Image.open(path)]
-    ocr_extractions = [pytesseract.image_to_string(images[-1])]
+    text = pytesseract.image_to_string(images[-1])
+    ocr_extractions = [text]
     for i in range(3):
         images.append(images[-1].rotate(90))
-        ocr_extractions.append(pytesseract.image_to_string(images[-1]))
+        text = pytesseract.image_to_string(images[-1])
+        ocr_extractions.append(text)
     images_zip_ocr = [list(pair) for pair in zip(images, ocr_extractions)]
     return images_zip_ocr
 
@@ -135,8 +137,8 @@ def count_occurrences(path):
     images_zip_ocr = rotate_image_ocr(path)
     occurrences = []
     for img_txt_pair in images_zip_ocr:
-        ocr_text = img_txt_pair[0]
-        num_occurrences = ocr_text.count('the')
+        ocr_text = img_txt_pair[1]
+        num_occurrences = ocr_text.lower().count('the')
         occurrences.append(num_occurrences)
     return occurrences
 
@@ -154,9 +156,10 @@ def run_image(file, metadata):
     doc.metadata[METADATA_FILE_NAME_FIELD] = doc.image_file
     # run OCR, update the doc, and write the file
     img_ocr = isolate_correct_img_ocr(doc.image_path)
-    ocr_text = img_ocr[0]
-    doc.text = ocr_text
+    doc.text = img_ocr[1]
     doc.write_text_file()
+    # save the image in the right place
+    img_ocr[0].save(doc.image_path)
     # update master metadata file
     with open(METADATA_FILE, "a") as file:
         file.write(doc.metadata_string())
