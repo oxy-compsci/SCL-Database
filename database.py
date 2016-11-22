@@ -6,7 +6,7 @@ import imghdr
 import os
 import re
 from copy import copy
-
+import random
 import pytesseract
 
 # FOLDER PATHS
@@ -42,6 +42,12 @@ class Document:
         else:
             self.text = ""
         self.metadata = {}
+        self.search_text_matches = []
+        # if self.search_text_matches:
+            # self.search_text_choice = len(self.search_text_matches) // 2
+            # self.search_text_left = self.search_text_choice - 100
+            # self.search_text_right = self.search_text_choice + 100
+        self.search_meta_matches = {}
     def text_file_name(self):
         return "document" + str(self.filenumber) + "text.txt"
     def has_image_file(self):
@@ -102,6 +108,28 @@ def read_documents():
         if doc.has_files():
             documents.append(doc)
     return documents
+
+def search_term_in_metadata_and_text(term):
+    matches = set()
+    if term:
+        term = term.lower()
+        for instance in read_documents():
+            index = 0
+            for key in instance.metadata:
+                if term in instance.metadata[key].lower():
+                    instance.search_meta_matches[key] = instance.metadata[key]
+                    if instance.image_file not in matches:
+                        matches.add(instance)
+            if term in instance.text.lower():
+                while index < len(instance.text):
+                    index = instance.text.lower().find(term, index)
+                    if index == -1:
+                        break
+                    instance.search_text_matches.append(index)
+                    index += len(term)
+                if instance.image_file not in matches:
+                    matches.add(instance)
+    return matches
 
 # OCR FUNCTIONS
 

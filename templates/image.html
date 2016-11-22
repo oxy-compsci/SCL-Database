@@ -1,72 +1,85 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <title>Image and OCR Scanned Text</title>
+<meta charset="UTF-8">
+<title>Image and OCR Scanned Text</title>
 <style>
 body {
-    font-family: ‘Times New Roman’, Times, serif;
+font-family: ‘Times New Roman’, Times, serif;
 }
 .head {
-    width:100%;
-    height:70px;
-    text-align: center;
-    padding-top: 25px;
-    color: darkslategray;
-    background: rgba(108, 154, 164, .2);
+width:100%;
+height:70px;
+text-align: center;
+padding-top: 25px;
+color: darkslategray;
+background: rgba(108, 154, 164, .2);
 }
 h1 {
-    text-align: center;
-    font-size: 16px;
+text-align: center;
+font-size: 16px;
 }
 #image {
-    padding-right: 15px;
-    padding-left: 10px;
-    float:right;
+padding-right: 15px;
+padding-left: 10px;
+float:right;
 }
 .box {
-    margin-top: 17px;
-    overflow: scroll;
-    border:1px solid black;
-    float:left;
-    width: 595px;
-    height: 842px;
-    padding-left: 5px;
-    padding-right: 5px;
+margin-top: 17px;
+overflow: scroll;
+border:1px solid black;
+float:left;
+width: 595px;
+height: 842px;
+padding-left: 5px;
+padding-right: 5px;
 }
 .metadata {
-    display: inline-block;
-    width: 100%;
-    height: 250px;
-    color: darkslategray;
-    background: rgba(108, 154, 164, .2);
-    text-align:center;
+display: inline-block;
+width: 100%;
+height: 250px;
+color: darkslategray;
+background: rgba(108, 154, 164, .2);
+text-align:center;
 
 }
 #metadata_title {
-    text-align: center;
-    font-size: 17px;
+text-align: center;
+font-size: 17px;
 }
 </style>
 </head>
 <body bgcolor="Lightblue">
-    <div class="head">
-        <h1>{{ image_file_name }}</h1>
-    </div>
-    </br>
-    <p id="image" style="float: right;"><img src="/completed_files/{{ image_file_name }}" height="842px" width="595px" border="1px"></p>
-    <div class="box">
-    <p id="ocr_title">Optical Character Recognition Result:</p>
-    <p id="ocr" >{{ txt_content }}</p>
-    </div>
-    <div class="metadata">
-    <p id="metadata_title">Metadata</p>
-    <p>{% for category in metadata %}
-            {% for part in category %}
-                {{ part }}<br>
-            {% endfor %}
-        {% endfor %}
-    </p>
-    </div>
+<div class="head">
+    <h1>{{ image_file }}</h1>
+</div>
+</br>
+<p id="image" style="float: right;"><img src="/completed_files/{{ image_file }}" height="842px" width="595px" border="1px"></p>
+<div class="box">
+<p id="ocr_title">Optical Character Recognition Result:</p>
+<p id="ocr" >{{ text_content }}</p>
+</div>
+
+<div class="metadata">
+<p id="metadata_title">Metadata</p>
+Filename: </br>
+{{ metadata['File Name'] }} </br>
+Box Number: </br>
+{{ metadata['Box Number'] }} </br>
+Date Added: </br>
+{{ metadata['Date Added (mm/dd/yyyy)'] }} </br>
+Name of Uploader: </br>
+{{ metadata['Name of Uploader (Last, First)'] }} </br>
+Comments/Notes about file: </br>
+{{ metadata['Comments/Notes about File'] }}
+</p>
+
+{#    File Name: [document0image.jpg]
+Box Number: [TEST BOXNUMBER]
+Date Added (mm/dd/yyyy): [TEST DATEADDED]
+Name of Uploader (Last, First): [TEST UPLOADER]
+Comments/Notes about File: [TEST COMMENTS]#}
+
+</div>
 </body>
 </html>

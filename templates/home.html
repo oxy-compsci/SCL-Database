@@ -1,105 +1,105 @@
 <!DOCTYPE html>
 <html lang="en">
-	<head>
-        <style>
-            body {
-                font-family: ‘Times New Roman’, Times, serif;
-            }
-            h1 {
-                line-height: 50%;
-            }
-            div {
-                text-align: center;
-            }
-            img {
-                display: block;
-                margin: 0 auto;
-                user-drag: none;
-                user-select: none;
-                -moz-user-select: none;
-                -webkit-user-drag: none;
-                -webkit-user-select: none;
-                -ms-user-select: none;
-            }
-            form {
-                margin: 10px auto;
-            }
-            #search {
-                padding:8px 15px;
-                background:rgba(149, 183, 194, 1);
-                border:0px solid #dbdbdb;
-            }
-            #button {
-                position:relative;
-                padding:6px 15px;
-                left:-8px;
-                border:2px solid rgba(188, 124, 73, 1);
-                background-color:rgba(183, 98, 90, 1);
-                color:#fafafa;
-            }
-            #button:hover  {
-                background-color:rgba(183, 98, 90, 1);
-                color:lightgray;
-            }
-            /*}*/
-            /*#titlelib {*/
-                /*font-family: ‘Times New Roman’, Times, serif;*/
-                /*color: Black;*/
-                /*font-size: 70px;*/
-            /*}*/
-            /*#titledatabase {*/
-                /*font-family: ‘Times New Roman’, Times, serif;*/
-                /*color: Black;*/
-                /*font-size: 70px;*/
-            /*}*/
-            #filestitle {
-                font-size: 20px;
-                color: Black;
-            }
-            #filelinks {
-                color: Black;
-                font-size: 16px;
-            }
-            #filelinks:hover {
-                text-decoration: none;
-                color: Black;
-                font-size: 16px;
-            }
-		</style>
-        <meta charset="UTF-8">
-		<title>
-			SCL Database
-		</title>
-	</head>
-    <body bgcolor="Lightblue">
-        <!--<img width=50%; height=50%; src="/static/SCL_logo_cal.png">-->
-        <!--<h1 id="titlelib">-->
-            <!--Southern California Library-->
-        <!--</h1>-->
-        <!--<h1 id="titledatabase">-->
-            <!--Online Archive Database-->
-        <!--</h1>-->
-        <div>
-        </br></br>
-        <img width=50%; height=50%;  src="/static/scl_text_logo_cropped.png">
-        </br></br>
-        <form>
-            <input id=search type="text" required>
-            <input id=button type="button" value="Search">
-        </form>
-        </br></br></br>
+<head>
+<style>
+body {
+    font-family: ‘Times New Roman’, Times, serif;
+}
+h1 {
+    line-height: 50%;
+}
+div {
+    text-align: center;
+}
+img {
+    display: block;
+    margin: 0 auto;
+    user-drag: none;
+    user-select: none;
+    -moz-user-select: none;
+    -webkit-user-drag: none;
+    -webkit-user-select: none;
+    -ms-user-select: none;
+}
+form {
+    margin: 10px auto;
+}
+#search {
+    padding:8px 15px;
+    background:rgba(149, 183, 194, 1);
+    border:0px solid #dbdbdb;
+}
+#button {
+    position:relative;
+    padding:6px 15px;
+    left:-8px;
+    border:2px solid rgba(188, 124, 73, 1);
+    background-color:rgba(183, 98, 90, 1);
+    color:#fafafa;
+}
+#button:hover  {
+    background-color:rgba(183, 98, 90, 1);
+    color:lightgray;
+}
+/*}*/
+/*#titlelib {*/
+    /*font-family: ‘Times New Roman’, Times, serif;*/
+    /*color: Black;*/
+    /*font-size: 70px;*/
+/*}*/
+/*#titledatabase {*/
+    /*font-family: ‘Times New Roman’, Times, serif;*/
+    /*color: Black;*/
+    /*font-size: 70px;*/
+/*}*/
+#filestitle {
+    font-size: 20px;
+    color: Black;
+}
+#filelinks {
+    color: Black;
+    font-size: 16px;
+}
+#filelinks:hover {
+    text-decoration: none;
+    color: Black;
+    font-size: 16px;
+}
+</style>
+<meta charset="UTF-8">
+<title>
+    SCL Database
+</title>
+</head>
+<body bgcolor="Lightblue">
+<!--<img width=50%; height=50%; src="/static/SCL_logo_cal.png">-->
+<!--<h1 id="titlelib">-->
+    <!--Southern California Library-->
+<!--</h1>-->
+<!--<h1 id="titledatabase">-->
+    <!--Online Archive Database-->
+<!--</h1>-->
+<div>
+</br></br>
+<img width=50%; height=50%;  src="/static/scl_text_logo_cropped.png">
+</br></br>
+<form>
+    <input id=search type="text" name="search">
+    <input id=button type="submit">
+</form>
+</br></br></br>
 
-        {% for filename in results %} <a href="/scl/{{ filename }}" id="results">{{ filename }}</a><br>
-        {% endfor %}
-            <p id="filestitle">
-                <b>Uploaded Files:</b>
-            </p>
-            {% for file in text_file_names %}
-            <p>
-                <a id=filelinks href="/scl/{{ file }}">{{ file }}</a>
-            </p>
-            {% endfor %}
-         </div>
-	</body>
+{% for filename in results %} <a href="/scl/{{ filename }}" id="results">{{ filename }}</a><br>
+{% endfor %}
+    <p id="filestitle">
+        <b>Uploaded Files:</b>
+    </p>
+    {% for file in filenames %}
+    <p>
+        <a id=filelinks href="/scl/{{ file }}">{{ file }}</a>
+    </p>
+    {% endfor %}
+ </div>
+</body>
 </html>
 
