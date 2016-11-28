@@ -23,9 +23,13 @@ METADATA_FILE = "metadata.txt"
 METADATA_FILE_NAME_FIELD = "File Name"
 METADATA_FIELDS = [
     METADATA_FILE_NAME_FIELD,
-    "Box Number",
+    "Title",
+    "Creator",
     "Date Added (mm/dd/yyyy)",
+    "Type",
     "Name of Uploader (Last, First)",
+    "Tags and/or Keywords",
+    "Box Number",
     "Comments/Notes about File",
 ]
 
