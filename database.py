@@ -6,7 +6,8 @@ import imghdr
 import os
 import re
 from copy import copy
-import random
+from PIL import Image
+
 import pytesseract
 
 # FOLDER PATHS
@@ -149,15 +150,44 @@ def request_new_file_number():
 def ocr_extract(path):
     return pytesseract.image_to_string(Image.open(path))
 
+def rotate_image_ocr(path):
+    images = [Image.open(path)]
+    text = pytesseract.image_to_string(images[-1])
+    ocr_extractions = [text]
+    for i in range(3):
+        images.append(images[-1].rotate(90))
+        text = pytesseract.image_to_string(images[-1])
+        ocr_extractions.append(text)
+    images_zip_ocr = [list(pair) for pair in zip(images, ocr_extractions)]
+    return images_zip_ocr
+
+def count_occurrences(path):
+    images_zip_ocr = rotate_image_ocr(path)
+    occurrences = []
+    for img_txt_pair in images_zip_ocr:
+        ocr_text = img_txt_pair[1]
+        num_occurrences = ocr_text.lower().count('the')
+        occurrences.append(num_occurrences)
+    return occurrences
+
+def isolate_correct_img_ocr(path):
+    images_zip_ocr = rotate_image_ocr(path)
+    occurrences_of_the = count_occurrences(path)
+    index_of_pair = occurrences_of_the.index(max(occurrences_of_the))
+    img_ocr = images_zip_ocr[index_of_pair]
+    return img_ocr
+
 def run_image(file, metadata):
     # create the new Document
     doc = Document(file)
     doc.metadata = metadata
     doc.metadata[METADATA_FILE_NAME_FIELD] = doc.image_file
     # run OCR, update the doc, and write the file
-    text = ocr_extract(doc.image_path)
-    doc.text = text
+    img_ocr = isolate_correct_img_ocr(doc.image_path)
+    doc.text = img_ocr[1]
     doc.write_text_file()
+    # save the image in the right place
+    img_ocr[0].save(doc.image_path)
     # update master metadata file
     with open(METADATA_FILE, "a") as file:
         file.write(doc.metadata_string())
