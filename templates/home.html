@@ -65,6 +65,11 @@ form {
     color: Black;
     font-size: 16px;
 }
+
+.search_results {
+    width: 50%;
+    margin: auto;
+}
 </style>
 <meta charset="UTF-8">
 <title>
@@ -89,7 +94,16 @@ form {
 </form>
 </br></br></br>
 
-{% for filename in results %} <a href="/scl/{{ filename }}" id="results">{{ filename }}</a><br>
+<div class="search_results">
+{% for list in results %}
+    <a href="/scl/{{ list[0] }}" id="results">{{ list[0] }}</a></br>
+    <p>Text Preview:</p>
+    <p>{{  list[1] }}</p>
+    Search term in metadata: </br>
+    {% for category in list[2] %}
+        <p>{{  category }}</p>
+        {% endfor %}
+        </br>
 {% endfor %}
     <p id="filestitle">
         <b>Uploaded Files:</b>
@@ -99,7 +113,8 @@ form {
         <a id=filelinks href="/scl/{{ file }}">{{ file }}</a>
     </p>
     {% endfor %}
- </div>
+</div>
+</div>
 </body>
 </html>
 

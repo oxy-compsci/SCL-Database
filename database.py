@@ -47,12 +47,8 @@ class Document:
         else:
             self.text = ""
         self.metadata = {}
-        self.search_text_matches = []
-        # if self.search_text_matches:
-            # self.search_text_choice = len(self.search_text_matches) // 2
-            # self.search_text_left = self.search_text_choice - 100
-            # self.search_text_right = self.search_text_choice + 100
         self.search_meta_matches = {}
+        self.search_text_matches = []
     def text_file_name(self):
         return "document" + str(self.filenumber) + "text.txt"
     def has_image_file(self):
@@ -135,6 +131,14 @@ def search_term_in_metadata_and_text(term):
                 if instance.image_file not in matches:
                     matches.add(instance)
     return matches
+
+def get_text_preview(index, text_path):
+    # Assumes there will always be +/- 100 characters arund search term match in text.
+    with open(text_path, 'r') as x:
+        text = x.read()
+        index_left_handle = index - 100
+        index_right_handle = index + 100
+    return text[index_left_handle:index_right_handle]
 
 # OCR FUNCTIONS
 

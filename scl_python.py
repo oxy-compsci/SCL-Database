@@ -7,6 +7,7 @@ import os
 import re
 from os import listdir, rename
 from os.path import join
+import math
 
 from flask import Flask, render_template, send_from_directory, request
 from database import *
@@ -16,11 +17,29 @@ app = Flask(__name__)
 # VISITING THE HOMEPAGE RUNS ALL OF THE IMAGE-->OCR CODE ON FILES IN THE LOADING ZONE
 @app.route('/')
 def display_homepage():
+    search_term = request.args.get('search')
     filenames = []
     result_filenames = []
-    result_instances = search_term_in_metadata_and_text(request.args.get('search'))
+    description = ''
+    result_instances = search_term_in_metadata_and_text(search_term)
     for instance in result_instances:
-        result_filenames.append(instance.image_file)
+        metamatches = []
+        for key in instance.search_meta_matches:
+            metamatches.append(key)
+        if not metamatches:
+            metamatches.append('No metadata matches found.')
+        text_match_indices_list = instance.search_text_matches
+        print(text_match_indices_list)
+        if text_match_indices_list:
+            index = len(text_match_indices_list) // 2
+            print(index)
+            description = get_text_preview(text_match_indices_list[index], instance.text_path)
+        elif not text_match_indices_list:
+            description = 'No text matches found.'
+        print(instance.image_file)
+        print('term: {}'.format(search_term))
+        print('result description: {}'.format(description))
+        result_filenames.append([instance.image_file, description, metamatches])
     for instance in read_documents():
         filenames.append(instance.image_file)
     return render_template('home.html', filenames=filenames, results=result_filenames)
@@ -45,11 +64,13 @@ def image_file(file_name):
     return send_from_directory('completed_files', file_name)
 
 if __name__ == "__main__":
+
     run_images()
     app.run(debug=True)
 
 
-# All code before Cal messes with it
+# All code before Cal messes with it.
+# This is also the location of Chloes OCR auto-rotate additions.
 '''
     try:
     import Image
@@ -85,36 +106,6 @@ def folder_check(path):
 def ocr_extract(file):
     ocr_text = pytesseract.image_to_string(Image.open(file))
     return ocr_text
-
-def rotate_image_ocr(file):
-    img = Image.open(file)
-    img2 = img.rotate(90)
-    img3 = img2.rotate(90)
-    img4 = img3.rotate(90)
-    images = [img, img2, img3, img4]
-    ocr1 = pytesseract.image_to_string(img)
-    ocr2 = pytesseract.image_to_string(img2)
-    ocr3 = pytesseract.image_to_string(img3)
-    ocr4 = pytesseract.image_to_string(img4)
-    ocr_extractions = [ocr1, ocr2, ocr3, ocr4]
-    images_zip_ocr = zip(images, ocr_extractions)
-    return images_zip_ocr
-
-def count_occurences(file):
-    images_zip_ocr = rotate_image_ocr(file)
-    occurences = []
-    for img_txt_pair in images_zip_ocr:
-        ocr_text = img_txt_pair[0]
-        num_occurences = ocr_text.count('the')
-        occurences.append(num_occurences)
-    return occurences
-
-def isolate_correct_img_ocr(file):
-    images_zip_ocr = rotate_image_ocr(file)
-    occurences_of_the = count_occurences(file)
-    index_of_pair = occurences_of_the.index(max(occurences_of_the))
-    img_ocr = images_zip_ocr[index_of_pair]
-    return img_ocr
 
 # CREATES NEW .TXT FILE WITH STRING, FILENAME, AND PATH
 def text_file_creator(string, filename, path):
@@ -300,9 +291,6 @@ def run_images():
                     append_metadata(metatext)
                     image_file_dest = os.path.join(Dest_path, image_name)
                     text = ocr_extract(filename_path)
-                    ocr_extractions = rotate_image_ocr(filename_path)
-                    # print('This is the list of rotated ocr extractions: {}'.format(ocr_extractions))
-                    # print('This is the number of things in the ocr extractions list: {}'.format(len(ocr_extractions)))
                     text_file_creator(text, text_name, Text_path)
                     rename(filename_path, image_file_dest)
                     count_plus_one()
@@ -314,8 +302,6 @@ def search_text(term):
     filelist = []
     filenums = []
     for filename in listdir(Text_path):
-        if filename == '.DS_Store':
-            continue
         filepath = join(Text_path, filename)
         text = open(filepath, 'r')
         ocr_text = text.read()
