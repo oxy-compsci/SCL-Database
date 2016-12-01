@@ -10,6 +10,8 @@ from PIL import Image
 
 import pytesseract
 
+from flickr import download_flickr_images, upload_image
+
 # FOLDER PATHS
 LOADING_ZONE = "loading_zone"
 TEXT_PATH = "completed_text_files"
@@ -199,6 +201,9 @@ def run_image(file, metadata):
     doc.write_text_file()
     # save the image in the right place
     img_ocr[0].save(doc.image_path)
+    # upload image to Flickr
+    flickr_dict = upload_image(doc.image_path)
+    doc.metadata.update(flickr_dict)
     # update master metadata file
     with open(METADATA_FILE, "a") as file:
         file.write(doc.metadata_string())
@@ -242,5 +247,5 @@ def run_images():
     return new_documents
 
 if __name__ == "__main__":
+    download_flickr_images()
     run_images()
-    #app.run(debug=True)
