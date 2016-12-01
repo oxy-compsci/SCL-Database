@@ -40,7 +40,8 @@ class Document:
         self.image_file = image_file
         self.image_path = os.path.join(DEST_PATH, image_file)
         self.filenumber = re.search("document(.*)image", self.image_path).group(1)
-        self.text_path = os.path.join(TEXT_PATH, self.text_file_name())
+        self.text_file = self.text_file_name()
+        self.text_path = os.path.join(TEXT_PATH, self.text_file)
         if self.has_text_file():
             with open(self.text_path) as file:
                 self.text = file.read()

@@ -1,9 +1,11 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
-<style>
+    <head>
+        <meta charset="UTF-8">
+        <title>SCL Database</title>
+        <style>
 body {
-    font-family: ‘Times New Roman’, Times, serif;
+    font-family: "Times New Roman", Times, serif;
 }
 h1 {
     line-height: 50%;
@@ -37,21 +39,10 @@ form {
     background-color:rgba(183, 98, 90, 1);
     color:#fafafa;
 }
-#button:hover  {
+#button:hover {
     background-color:rgba(183, 98, 90, 1);
     color:lightgray;
 }
-/*}*/
-/*#titlelib {*/
-    /*font-family: ‘Times New Roman’, Times, serif;*/
-    /*color: Black;*/
-    /*font-size: 70px;*/
-/*}*/
-/*#titledatabase {*/
-    /*font-family: ‘Times New Roman’, Times, serif;*/
-    /*color: Black;*/
-    /*font-size: 70px;*/
-/*}*/
 #filestitle {
     font-size: 20px;
     color: Black;
@@ -65,56 +56,43 @@ form {
     color: Black;
     font-size: 16px;
 }
-
 .search_results {
     width: 50%;
     margin: auto;
 }
-</style>
-<meta charset="UTF-8">
-<title>
-    SCL Database
-</title>
-</head>
-<body bgcolor="Lightblue">
-<!--<img width=50%; height=50%; src="/static/SCL_logo_cal.png">-->
-<!--<h1 id="titlelib">-->
-    <!--Southern California Library-->
-<!--</h1>-->
-<!--<h1 id="titledatabase">-->
-    <!--Online Archive Database-->
-<!--</h1>-->
-<div>
-</br></br>
-<img width=50%; height=50%;  src="/static/scl_text_logo_cropped.png">
-</br></br>
-<form>
-    <input id=search type="text" name="search">
-    <input id=button type="submit">
-</form>
-</br></br></br>
+        </style>
+    </head>
+    <body bgcolor="Lightblue">
+        <div>
+            </br></br>
+            <img width="50%" height="50%" src="/static/scl_text_logo_cropped.png">
+            </br></br>
+            <form>
+                <input id="search" type="text" name="search">
+                <input id="button" type="submit">
+            </form>
+            </br></br></br>
 
-<div class="search_results">
-{% for list in results %}
-    <a href="/scl/{{ list[0] }}" id="results">{{ list[0] }}</a></br>
-    <p>Text Preview:</p>
-    <p>{{  list[1] }}</p>
-    Search term in metadata: </br>
-    {% for category in list[2] %}
-        <p>{{  category }}</p>
-        {% endfor %}
-        </br>
-{% endfor %}
-    <p id="filestitle">
-        <b>Uploaded Files:</b>
-    </p>
-    {% for file in filenames %}
-    <p>
-        <a id=filelinks href="/scl/{{ file }}">{{ file }}</a>
-    </p>
-    {% endfor %}
-</div>
-</div>
-</body>
+            <div class="search_results">
+                {% for list in results %}
+                <a href="/scl/{{ list[0] }}" id="results">{{ list[0] }}</a></br>
+                <p>Text Preview:</p>
+                <p>{{ list[1] }}</p>
+                Search term in metadata: </br>
+                {% for category in list[2] %}
+                <p>{{ category }}</p>
+                {% endfor %}
+                </br>
+                {% endfor %}
+                <p id="filestitle">
+                <b>Uploaded Files:</b>
+                </p>
+                {% for file in filenames %}
+                <p>
+                <a id="filelinks" href="/scl/{{ file }}">{{ file }}</a>
+                </p>
+                {% endfor %}
+            </div>
+        </div>
+    </body>
 </html>
-
