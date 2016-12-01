@@ -1,16 +1,5 @@
-try:
-    import Image
-except ImportError:
-    from PIL import Image
-import imghdr
-import os
-import re
-from os import listdir, rename
-from os.path import join
-import math
-
 from flask import Flask, render_template, send_from_directory, request
-from database import *
+from database import read_documents, search_term_in_metadata_and_text, get_text_preview
 
 app = Flask(__name__)
 
@@ -40,20 +29,15 @@ def display_homepage():
         filenames.append(instance.image_file)
     return render_template('home.html', filenames=filenames, results=result_filenames)
 
-
 @app.route('/scl/<file_name>')
 def display_images(file_name):
     for instance in read_documents():
         if instance.image_file == file_name:
-            image_file = instance.image_file
-            text_file = instance.text_path
-            text_content = instance.text
-            metadata = instance.metadata
-    return render_template('image.html',
-                           image_file=image_file,
-                           text_file=text_file,
-                           text_content=text_content,
-                           metadata=metadata)
+            return render_template('image.html',
+                                   image_file=instance.image_file,
+                                   text_file=instance.text_file,
+                                   text_content=instance.text,
+                                   metadata=instance.metadata)
 
 @app.route('/completed_files/<file_name>')
 def image_file(file_name):
