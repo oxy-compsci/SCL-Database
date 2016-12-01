@@ -169,8 +169,7 @@ def rotate_image_ocr(path):
     images_zip_ocr = [list(pair) for pair in zip(images, ocr_extractions)]
     return images_zip_ocr
 
-def count_occurrences(path):
-    images_zip_ocr = rotate_image_ocr(path)
+def count_occurrences(images_zip_ocr):
     occurrences = []
     for img_txt_pair in images_zip_ocr:
         ocr_text = img_txt_pair[1]
@@ -180,7 +179,7 @@ def count_occurrences(path):
 
 def isolate_correct_img_ocr(path):
     images_zip_ocr = rotate_image_ocr(path)
-    occurrences_of_the = count_occurrences(path)
+    occurrences_of_the = count_occurrences(images_zip_ocr)
     index_of_pair = occurrences_of_the.index(max(occurrences_of_the))
     img_ocr = images_zip_ocr[index_of_pair]
     return img_ocr
