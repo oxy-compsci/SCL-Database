@@ -30,7 +30,7 @@ METADATA_FIELDS = [
     "Name of Uploader (Last, First)",
     "Tags and/or Keywords",
     "Box Number",
-    "Comments/Notes about File",
+    "Comments/Notes about File"
 ]
 
 # DOCUMENT FUNCTIONS
@@ -138,11 +138,19 @@ def search_term_in_metadata_and_text(term):
 
 # OCR FUNCTIONS
 
-def read_folder_metadata(path):
+def text_file_exists(path):
     for file in os.listdir(path):
         if file.endswith('.txt'):
-            with open(os.path.join(path, file)) as file:
-                return metadata_to_dict(file.read())
+            return True
+    return False
+
+def read_folder_metadata(path):
+    text_exists = text_file_exists(path)
+    if text_exists:
+        for file in os.listdir(path):
+            if file.endswith('.txt'):
+                with open(os.path.join(path, file)) as file:
+                    return metadata_to_dict(file.read())
 
 def request_new_file_number():
     with open(COUNT_FILE) as file:
@@ -200,7 +208,6 @@ def run_image(file, metadata):
 
 def run_folder_images(path):
     new_documents = []
-    # FIXME this assumes there is a metadata file in the folder
     metadata = read_folder_metadata(path)
     for file in os.listdir(path):
         old_file_path = os.path.join(path, file)
@@ -227,7 +234,11 @@ def run_images():
     for folder in os.listdir(LOADING_ZONE):
         folder = os.path.join(LOADING_ZONE, folder)
         if os.path.isdir(folder):
-            new_documents.extend(run_folder_images(folder))
+            if text_file_exists(folder):
+                new_documents.extend(run_folder_images(folder))
+            else:
+                print("Folder Name: {} does not contain a text file with metadata and it was skipped over. Please go back and add one.".format(folder))
+                continue
     return new_documents
 
 if __name__ == "__main__":
