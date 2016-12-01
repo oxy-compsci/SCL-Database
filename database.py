@@ -119,8 +119,9 @@ def search_term_in_metadata_and_text(term):
             for key in instance.metadata:
                 if term in instance.metadata[key].lower():
                     instance.search_meta_matches[key] = instance.metadata[key]
-                    if instance.image_file not in matches:
+                    if instance not in matches:
                         matches.add(instance)
+                        print('instance not in matches meta: {}'.format(instance.image_file))
             if term in instance.text.lower():
                 while index < len(instance.text):
                     index = instance.text.lower().find(term, index)
@@ -128,17 +129,11 @@ def search_term_in_metadata_and_text(term):
                         break
                     instance.search_text_matches.append(index)
                     index += len(term)
-                if instance.image_file not in matches:
+                if instance not in matches:
                     matches.add(instance)
+                    print('instance not in matches text: {}'.format(instance.image_file))
     return matches
 
-def get_text_preview(index, text_path):
-    # Assumes there will always be +/- 100 characters arund search term match in text.
-    with open(text_path, 'r') as x:
-        text = x.read()
-        index_left_handle = index - 100
-        index_right_handle = index + 100
-    return text[index_left_handle:index_right_handle]
 
 # OCR FUNCTIONS
 

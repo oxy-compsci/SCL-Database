@@ -14,7 +14,6 @@ from database import *
 
 app = Flask(__name__)
 
-# VISITING THE HOMEPAGE RUNS ALL OF THE IMAGE-->OCR CODE ON FILES IN THE LOADING ZONE
 @app.route('/')
 def display_homepage():
     search_term = request.args.get('search')
@@ -30,8 +29,10 @@ def display_homepage():
             metamatches.append('No metadata matches found.')
         text_match_indices_list = instance.search_text_matches
         if text_match_indices_list:
-            index = len(text_match_indices_list) // 2
-            description = get_text_preview(text_match_indices_list[index], instance.text_path)
+            if len(instance.text) >= 150:
+                description = instance.text[0:150]
+            else:
+                description = instance.text
         elif not text_match_indices_list:
             description = 'No text matches found.'
         result_filenames.append([instance.image_file, description, metamatches])
