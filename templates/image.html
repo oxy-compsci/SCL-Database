@@ -37,25 +37,26 @@ padding-right: 5px;
 .metadata {
 display: inline-block;
 width: 100%;
-height: 250px;
 color: darkslategray;
 background: rgba(108, 154, 164, .2);
 text-align:center;
-
+padding: 30px;
 }
-#metadata_title {
-text-align: center;
-font-size: 17px;
+table {
+    margin: auto;
+    table-layout: auto;
+    border-collapse: collapse;
+    width: 50%;
 }
 </style>
 </head>
 <body bgcolor="Lightblue">
 <a href="/"><b>HOME</b></a>
 <div class="head">
-    <h1>{{ image_file }}</h1>
+<h1>{{  image_file  }}</h1>
 </div>
 </br>
-<p id="image" style="float: right;"><img src="/completed_files/{{ image_file }}" height="842px" width="595px" border="1px"></p>
+<p id="image" style="float: right;"><img src="{{ metadata['Preview Link'] }}" height="842px" width="595px" border="1px"></p>
 <div class="box">
 <p id="ocr_title">Optical Character Recognition Result:</p>
 <p id="ocr" >{{ text_content }}</p>
@@ -63,35 +64,18 @@ font-size: 17px;
 
 <div class="metadata">
 <table border=".5">
+<thead>
 <tr>
-<th colspan="2">Metadata</th>
+<td colspan="2"><p>Metadata</p></td>
 </tr>
+</thead>
+{% for key, value in metadata %}
 <tr>
-<th>Filename</th>
-<th>{{ metadata['File Name'] }}</th>
+<td><p>{{ key }}</p></td>
+<td><p>{{ value }}</p></td>
 </tr>
-<tr>
-<th>Creator</th>
-<th>{{ metadata['Creator'] }}</th>
-</tr>
-<tr>
-<th>Date Added</th>
-<th>{{ metadata['Date Added (mm/dd/yyyy)'] }}</th>
-</tr>
-<tr>
-<th>Type</th>
-<th>{{ metadata['Type'] }}</th>
-</tr>
-<tr>
-<th>Tags and/or Keywords</th>
-<th>{{ metadata['Tags and/or Keywords'] }}</th>
-</tr>
-<tr>
-<th>Box Number</th>
-<th>{{ metadata['Box Number'] }}</th>
-</tr>
+{%  endfor %}
 </table>
-
 
 {#
 File Name: [document1image.png]
