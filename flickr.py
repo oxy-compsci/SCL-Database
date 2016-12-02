@@ -43,8 +43,8 @@ def get_photo_url(flickr, photo_id, size='medium'):
     return url_template.format(size_suffix=suffix, **dict(photo.items()))
 
 def read_flickr_keys():
-    if not exists("secrets"):
-        print("ERROR: Unable to install tesseract")
+    if not exists("api_keys"):
+        print("ERROR: Unable to read Flickr API keys")
         print("Please contact Justin Li <justinnhli@oxy.edu> for support")
         exit(1)
     with open("secrets") as fd:
@@ -63,7 +63,7 @@ def authenticate_flickr():
     api_key, api_secret = read_flickr_keys()
     # Create a (potentially temporary) FlickrAPI instance
     flickr = flickrapi.FlickrAPI(api_key, api_secret, username=USERNAME)
-    # Only do this if we don"t have a valid token already
+    # Only do this if we don't have a valid token already
     if not flickr.token_valid(perms="delete"):
         # Get a request token out-of-band (OOB)
         flickr.get_request_token(oauth_callback="oob")
