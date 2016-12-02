@@ -41,7 +41,8 @@ def display_images(file_name):
                                    image_file=instance.image_file,
                                    text_file=instance.text_file,
                                    text_content=instance.text,
-                                   metadata=instance.get_metadata_list())
+                                   metadata=instance.get_metadata_list(),
+                                   preview_link=instance.metadata['Preview Link'])
 
 @app.route('/completed_files/<file_name>')
 def image_file(file_name):
