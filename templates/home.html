@@ -82,35 +82,52 @@
 </form>
 
 </br>
-</br>
-</br>
 
 <div class="search_results">
 {% if results %}
-<p>Search results...</p>
+    {%  if results == 'No search matches found.' %}
+        <p>No search matches found.</p>
+    {% else %}
+        <p>Search results...</p>
+        {% for instance in results %}
+            <table border=".5" width="100%">
+            <tbody>
+            <tr>
+            <td>Filename</td>
+            <td><a href="/scl/{{ instance.image_file }}" id="results">{{ instance.image_file }}</a></td>
+            <td rowspan="4" width="150"><p><img src="{{ instance.metadata['Thumbnail Link'] }}"></td>
+            </tr>
+            <tr>
+            <td>Title</td>
+            <td>{{ instance.metadata['Title'] }}</td>
+            </tr>
+            <tr>
+            <td>Text preview</td>
+            <td>
+            {% if instance.text|length >= 150 %}
+            <p>{{ instance.text[0:150] }}</p>
+            {% else %}
+            <p>{{ instance.text }}</p>
+            {%  endif %}
+            </tr>
+            <tr>
+            <td>Matches in metadata categories</td>
+            {%  if not instance.search_meta_matches %}
+            <td><p>No metadata matches found.</p></td>
+            {% else %}
+            <td>{% for key in instance.search_meta_matches %}
+            <p>{{  key }}</p>
+            {% endfor %}
+            {%  endif %}
+            </td>
+            </tr>
+            </tbody>
+            </br>
+        {% endfor %}
+        </table>
+    {%  endif %}
 {% endif %}
-{% for list in results %}
-    <table border=".5" width="100%">
-    <thead>
-    <tr>
-    <td colspan="2"><a href="/scl/{{ list[0] }}" id="results">{{ list[0] }}</a></td>
-    </tr>
-    </thead>
-    <tbody>
-    <tr>
-    <td>Text preview</td>
-    <td><p>{{  list[1] }}</p></td>
-    </tr>
-    <tr>
-    <td>Matches in metadata categories</td>
-    <td>{% for category in list[2] %}
-        <p>{{  category }}</p>
-    {% endfor %}
-    </td>
-    </tr>
-    </tbody>
-{% endfor %}
-</table>
+
 
 {#<div class="metadata">#}
 {#<p id="metadata_title">Metadata</p>#}
@@ -130,7 +147,7 @@
 
 {% for file in filenames %}
     <p>
-    <a id=filelinks href="/scl/{{ file }}">{{ file }}</a>
+    <a id=filelinks href="/scl/{{ file.image_file }}">{{ file.image_file }}</a>
     </p>
 {% endfor %}
 
