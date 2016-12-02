@@ -61,21 +61,39 @@ font-size: 17px;
 </div>
 
 <div class="metadata">
-<p id="metadata_title">Metadata</p>
-Filename: </br>
-{{ metadata['File Name'] }} </br>
-Box Number: </br>
-{{ metadata['Box Number'] }} </br>
-Date Added: </br>
-{{ metadata['Date Added (mm/dd/yyyy)'] }} </br>
-Name of Uploader: </br>
-{{ metadata['Name of Uploader (Last, First)'] }} </br>
-Comments/Notes about file: </br>
-{{ metadata['Comments/Notes about File'] }}
-</p>
+<table border=".5">
+<tr>
+<th colspan="2">Metadata</th>
+</tr>
+<tr>
+<th>Filename</th>
+<th>{{ metadata['File Name'] }}</th>
+</tr>
+<tr>
+<th>Creator</th>
+<th>{{ metadata['Creator'] }}</th>
+</tr>
+<tr>
+<th>Date Added</th>
+<th>{{ metadata['Date Added (mm/dd/yyyy)'] }}</th>
+</tr>
+<tr>
+<th>Type</th>
+<th>{{ metadata['Type'] }}</th>
+</tr>
+<tr>
+<th>Tags and/or Keywords</th>
+<th>{{ metadata['Tags and/or Keywords'] }}</th>
+</tr>
+<tr>
+<th>Box Number</th>
+<th>{{ metadata['Box Number'] }}</th>
+</tr>
+</table>
+
 
 {#
-File Name: []
+File Name: [document1image.png]
 Title: []
 Creator: []
 Date Added (mm/dd/yyyy): []
