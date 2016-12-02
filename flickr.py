@@ -112,16 +112,18 @@ def upload_image(path):
             continue
         master_album = album
         break
-    if master_album is None:
-        # FIXME should create album in this case
-        print("ERROR: Unable to upload image")
-        print("Please contact Justin Li <justinnhli@oxy.edu> for support")
-        exit(1)
     photo_id = flickr.upload(filename=path).find("photoid").text
-    flickr.photosets.addPhoto(
-            photoset_id=master_album.get('id'),
-            photo_id=photo_id,
-    )
+    if master_album is None:
+        rsp = flickr.photosets.create(
+                title="master",
+                primary_photo_id=photo_id,
+        )
+        master_album = rsp.find('photoset')
+    else:
+        flickr.photosets.addPhoto(
+                photoset_id=master_album.get('id'),
+                photo_id=photo_id,
+        )
     url = flickr.photos.getInfo(photo_id=photo_id).find('photo').find('urls').find('url').text
     thumbnail_link = get_photo_url(flickr, photo_id, size='thumbnail')
     preview_link = get_photo_url(flickr, photo_id, size='medium')
