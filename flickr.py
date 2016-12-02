@@ -6,7 +6,7 @@ from os.path import dirname, join, exists, realpath
 import requests
 import flickrapi
 
-USERNAME = "justinnhli12"
+USERNAME = "caelanbarr"
 
 SPECIAL_ALBUMS = set(['Auto Upload', 'master'])
 

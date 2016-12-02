@@ -61,8 +61,20 @@ class Document:
         else:
             self.text = ""
         self.metadata = {}
+        self.metadata_list = self.get_metadata_list()
         self.search_meta_matches = {}
         self.search_text_matches = []
+    def get_metadata_list(self):
+        list_from_dict = []
+        for field in METADATA_FIELDS:
+            if field in self.metadata:
+                list_from_dict.append([field, self.metadata[field]])
+            else:
+                list_from_dict.append([field, ''])
+        for field, value in sorted(self.metadata.items()):
+            if field not in METADATA_FIELDS:
+                list_from_dict.append([field, value])
+        return list_from_dict
     def text_file_name(self):
         return "document" + str(self.filenumber) + "text.txt"
     def has_image_file(self):
@@ -132,10 +144,8 @@ def search_term_in_metadata_and_text(term):
             index = 0
             for key in instance.metadata:
                 if term in instance.metadata[key].lower():
-                    instance.search_meta_matches[key] = instance.metadata[key]
                     if instance not in matches:
                         matches.add(instance)
-                        print('instance not in matches meta: {}'.format(instance.image_file))
             if term in instance.text.lower():
                 while index < len(instance.text):
                     index = instance.text.lower().find(term, index)
@@ -145,9 +155,9 @@ def search_term_in_metadata_and_text(term):
                     index += len(term)
                 if instance not in matches:
                     matches.add(instance)
-                    print('instance not in matches text: {}'.format(instance.image_file))
+        if not matches:
+            matches = "No search matches found."
     return matches
-
 
 # OCR FUNCTIONS
 
