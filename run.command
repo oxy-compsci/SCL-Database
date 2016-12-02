@@ -1,12 +1,13 @@
 #!/bin/bash
 
 homebrew_check() {
-	if which brew > /dev/null 2>&1; then
+	if ! which brew >/dev/null 2>&1; then
 		echo 'Installing Homebrew...'
 		echo 'You will be asked for your password'
+		read -p 'Press <Enter> to continue'
 		/usr/bin/ruby -e "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/master/install)"
 	fi
-	if ! which brew > /dev/null 2>&1; then
+	if ! which brew >/dev/null 2>&1; then
 		echo
 		echo 'ERROR: Unable to install Homebrew'
 		echo 'Please contact Justin <justinnhli@oxy.edu> for support'
@@ -17,9 +18,9 @@ homebrew_check() {
 python_check() {
 	if ! which python3 >/dev/null 2>&1; then
 		echo 'Python not detected; installing...'
-		install_homebrew && brew install python3
+		homebrew_check && brew install python3
 	fi
-	if ! which python3 > /dev/null 2>&1; then
+	if ! which python3 >/dev/null 2>&1; then
 		echo
 		echo 'ERROR: Unable to install Python'
 		echo 'Please contact Justin <justinnhli@oxy.edu> for support'
@@ -31,11 +32,25 @@ python_check() {
 tesseract_check() {
 	if ! which tesseract >/dev/null 2>&1; then
 		echo 'tesseract not detected; installing...'
-		install_homebrew && brew install tesseract
+		homebrew_check && brew install tesseract
 	fi
-	if ! which tesseract > /dev/null 2>&1; then
+	if ! which tesseract >/dev/null 2>&1; then
 		echo
 		echo 'ERROR: Unable to install tesseract'
+		echo 'Please contact Justin Li <justinnhli@oxy.edu> for support'
+		# FIXME make it obvious that an error has occurred
+		exit 1
+	fi
+}
+
+git_check() {
+	if ! which git >/dev/null 2>&1; then
+		echo 'tesseract not detected; installing...'
+		homebrew_check && brew install git
+	fi
+	if ! which git >/dev/null 2>&1; then
+		echo
+		echo 'ERROR: Unable to install git'
 		echo 'Please contact Justin Li <justinnhli@oxy.edu> for support'
 		# FIXME make it obvious that an error has occurred
 		exit 1
@@ -65,7 +80,7 @@ pip_check() {
 clear
 
 # change to the current directory
-cd "$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
+cd "$(cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd)"
 
 # check that everything is installed
 if ! ( tesseract_check && pip_check ); then
@@ -74,13 +89,19 @@ if ! ( tesseract_check && pip_check ); then
 	echo 'AN ERROR HAS OCCURRED'
 	echo 'Please copy the text in this window in your email to <justinnhli@oxy.edu>'
 	echo
-	read -p "Press <Enter> to continue (and close this window)"
+	read -p 'Press <Enter> to continue (and close this window)'
 	exit
 fi
 
 # run the database updates
 python3 database.py
 
+# update the repository with the new database
+#git add filecount.txt metadata.txt
+#git add completed_text_files/*.txt
+#git commit -m 'add images'
+#git push # FIXME need credentials here
+
 # ask the user to close the window
-read -p "Press <Enter> to close this window"
+read -p 'Press <Enter> to close this window'
 exit
