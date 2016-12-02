@@ -2,11 +2,12 @@ try:
     import Image
 except ImportError:
     from PIL import Image
+
+import copy
 import imghdr
 import os
 import re
-from copy import copy
-from PIL import Image
+import shutil
 
 import pytesseract
 
@@ -233,9 +234,7 @@ def run_folder_images(path):
             # create a document and do OCR
             doc = run_image(new_file_name, copy.copy(metadata))
             new_documents.append(doc)
-        else:
-            print("{} is not an image file".format(file))
-    # FIXME delete the folder?
+    shutil.rmtree(path)
     return new_documents
 
 def run_images():

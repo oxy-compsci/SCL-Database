@@ -1,7 +1,7 @@
 import shutil
 import webbrowser
 from os import makedirs
-from os.path import dirname, join, exists, realpath, relpath
+from os.path import dirname, join, exists, realpath
 
 import requests
 import flickrapi
@@ -25,7 +25,7 @@ def get_user_id(user):
 
 def get_original_photo_url(flickr, photo_id):
     photo = flickr.photos.getInfo(photo_id=photo_id).find("photo")
-    url_template = "https://farm{farm}.staticflickr.com/{server}/{id}_{originalsecret}_o.jpg"
+    url_template = "https://farm{farm}.staticflickr.com/{server}/{id}_{originalsecret}_o.{originalformat}"
     return url_template.format(**dict(photo.items()))
 
 def get_photo_url(flickr, photo_id, size='medium'):
@@ -39,13 +39,13 @@ def get_photo_url(flickr, photo_id, size='medium'):
     elif size == 'large':
         suffix = 'b'
     photo = flickr.photos.getInfo(photo_id=photo_id).find("photo")
-    url_template = "https://farm{farm}.staticflickr.com/{server}/{id}_{secret}_{size_suffix}.jpg"
+    url_template = "https://farm{farm}.staticflickr.com/{server}/{id}_{secret}_{size_suffix}.{originalformat}"
     return url_template.format(size_suffix=suffix, **dict(photo.items()))
 
 def read_flickr_keys():
     if not exists("secrets"):
-        print("Secrets file not found")
-        print("Please email Justin <> for support") # FIXME make consistent with run.command
+        print("ERROR: Unable to install tesseract")
+        print("Please contact Justin Li <justinnhli@oxy.edu> for support")
         exit(1)
     with open("secrets") as fd:
         key, secret = fd.read().splitlines()
@@ -97,6 +97,7 @@ def download_flickr_images():
             filename = url.split("/")[-1]
             download_file(url, join(directory, filename))
             indent_print("Downloaded {}".format(filename), indent=2)
+            flickr.photos.delete(photo_id=photo.get('id'))
         flickr.photosets.delete(photoset_id=album.get('id'))
 
 def upload_image(path):
@@ -112,7 +113,10 @@ def upload_image(path):
         master_album = album
         break
     if master_album is None:
-        pass # FIXME
+        # FIXME should create album in this case
+        print("ERROR: Unable to upload image")
+        print("Please contact Justin Li <justinnhli@oxy.edu> for support")
+        exit(1)
     photo_id = flickr.upload(filename=path).find("photoid").text
     flickr.photosets.addPhoto(
             photoset_id=master_album.get('id'),
@@ -135,13 +139,15 @@ def upload_images(paths):
 
 def main():
     flickr = authenticate_flickr()
-    albums = flickr.photosets.getList(user_id=USER_ID).find("photosets")
+    user_id = get_user_id(USERNAME)
+    albums = flickr.photosets.getList(user_id=user_id).find("photosets")
     for album in albums:
         album_title = album.find("title").text
+        if album_title in SPECIAL_ALBUMS:
+            continue
         print(album_title)
         for photo in flickr.walk_set(album.get("id")):
-            print("    " + get_photo_url(flickr, photo.get("id")))
-            print()
+            print("    " + get_original_photo_url(flickr, photo.get("id")))
 
 if __name__ == "__main__":
     main()
