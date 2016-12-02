@@ -12,6 +12,9 @@ SPECIAL_ALBUMS = set(['Auto Upload', 'master'])
 
 LOADING_ZONE = "loading_zone"
 
+def indent_print(message, indent):
+    print(4 * indent * " " + message)
+
 def get_current_path():
     return dirname(realpath(__file__))
 
@@ -76,6 +79,7 @@ def authenticate_flickr():
     return flickr
 
 def download_flickr_images():
+    indent_print("Downloading photos from Flickr...", indent=0)
     # FIXME make sure directory is correct
     flickr = authenticate_flickr()
     user_id = get_user_id(USERNAME)
@@ -87,11 +91,12 @@ def download_flickr_images():
         directory = join(get_current_path(), LOADING_ZONE, album_title)
         if not exists(directory):
             makedirs(directory)
-        print('Downloading album {}'.format(album_title))
+        indent_print("Downloading album {}..".format(album_title), indent=1)
         for photo in flickr.walk_set(album.get("id")):
             url = get_original_photo_url(flickr, photo.get('id'))
-            download_file(url, join(directory, url.split("/")[-1]))
-            print('Downloaded {}'.format(url))
+            filename = url.split("/")[-1]
+            download_file(url, join(directory, filename))
+            indent_print("Downloaded {}".format(filename), indent=2)
         flickr.photosets.delete(photoset_id=album.get('id'))
 
 def upload_image(path):
@@ -108,7 +113,6 @@ def upload_image(path):
         break
     if master_album is None:
         pass # FIXME
-    print('Uploading {}'.format(relpath(path, start=get_current_path())))
     photo_id = flickr.upload(filename=path).find("photoid").text
     flickr.photosets.addPhoto(
             photoset_id=master_album.get('id'),

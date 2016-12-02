@@ -35,6 +35,9 @@ METADATA_FIELDS = [
     "Comments/Notes about File"
 ]
 
+def indent_print(message, indent=0):
+    print(4 * indent * " " + message)
+
 # DOCUMENT FUNCTIONS
 
 class Document:
@@ -202,6 +205,7 @@ def run_image(file, metadata):
     # save the image in the right place
     img_ocr[0].save(doc.image_path)
     # upload image to Flickr
+    indent_print("Uploading to Flickr...", indent=2)
     flickr_dict = upload_image(doc.image_path)
     doc.metadata.update(flickr_dict)
     # update master metadata file
@@ -218,7 +222,7 @@ def run_folder_images(path):
         old_file_path = os.path.join(path, file)
         image_type = imghdr.what(old_file_path)
         if image_type:
-            print('{} is a {} file'.format(file, image_type))
+            indent_print("{} is a {} file; running OCR...".format(file, image_type), indent=2)
             # build the new file path
             file_ext = file.split(".")[1]
             count = request_new_file_number()
@@ -227,7 +231,7 @@ def run_folder_images(path):
             # move the file first
             os.rename(old_file_path, new_file_path)
             # create a document and do OCR
-            doc = run_image(new_file_name, copy(metadata))
+            doc = run_image(new_file_name, copy.copy(metadata))
             new_documents.append(doc)
         else:
             print("{} is not an image file".format(file))
@@ -235,17 +239,23 @@ def run_folder_images(path):
     return new_documents
 
 def run_images():
+    indent_print("Running OCR on images...", indent=0)
     new_documents = []
     for folder in os.listdir(LOADING_ZONE):
-        folder = os.path.join(LOADING_ZONE, folder)
-        if os.path.isdir(folder):
-            if text_file_exists(folder):
-                new_documents.extend(run_folder_images(folder))
+        path = os.path.join(LOADING_ZONE, folder)
+        if os.path.isdir(path):
+            indent_print("Looking at folder {}...".format(folder), indent=1)
+            if text_file_exists(path):
+                new_documents.extend(run_folder_images(path))
             else:
-                print("Folder Name: {} does not contain a text file with metadata and it was skipped over. Please go back and add one.".format(folder))
+                indent_print("No metadata file found; skipping...", indent=2)
                 continue
     return new_documents
 
 if __name__ == "__main__":
+    os.chdir(os.path.dirname(os.path.realpath(__file__)))
+    indent_print("Initializing...", indent=0)
     download_flickr_images()
     run_images()
+    print()
+    indent_print("Done!", indent=0)
