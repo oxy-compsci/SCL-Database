@@ -47,7 +47,7 @@ def read_flickr_keys():
         print("ERROR: Unable to read Flickr API keys")
         print("Please contact Justin Li <justinnhli@oxy.edu> for support")
         exit(1)
-    with open("secrets") as fd:
+    with open("api_keys") as fd:
         key, secret = fd.read().splitlines()
     return key.strip(), secret.strip()
 
