@@ -1,5 +1,5 @@
 from flask import Flask, render_template, send_from_directory, request
-from database import read_documents, search_term_in_metadata_and_text, get_text_preview
+from database import read_documents, search_term_in_metadata_and_text
 
 app = Flask(__name__)
 
@@ -44,6 +44,4 @@ def image_file(file_name):
     return send_from_directory('completed_files', file_name)
 
 if __name__ == "__main__":
-    run_images()
     app.run(debug=True)
-
