@@ -7,28 +7,7 @@ app = Flask(__name__)
 def display_homepage():
     search_term = request.args.get('search')
     filenames = []
-    description = ''
     result_instances = search_term_in_metadata_and_text(search_term)
-    # if type(result_instances) is str:
-    #     result_filenames = result_instances
-    # else:
-    #     result_filenames = result_instances
-        # for instance in result_instances:
-        #     metamatches = []
-        #     for key in instance.search_meta_matches:
-        #         metamatches.append(key)
-        #     if not metamatches:
-        #         metamatches.append('No metadata matches found.')
-        #     text_match_indices_list = instance.search_text_matches
-        #     if text_match_indices_list:
-        #         if len(instance.text) >= 150:
-        #             description = instance.text[0:150]
-        #         else:
-
-        #             description = instance.text
-        #     elif not text_match_indices_list:
-        #         description = 'No text matches found.'
-        #     result_filenames.append([instance.image_file, description, metamatches])
     for instance in read_documents():
         filenames.append(instance)
     return render_template('home.html', filenames=filenames, results=result_instances)
