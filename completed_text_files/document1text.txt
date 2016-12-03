@@ -1,0 +1,45 @@
+Brandon Lehr
+
+Question 1 (20 points) v ' . ‘
+For each of the following assertions, please indicate whether they are true or false. l\‘o credit Will be given
+
+without an explanation as to why your claim is correct.
+
+a. {4 points) Assertion: It is possible to determine whether a good is normal or inferior by looking at the
+shape of a single indifference curve.
+
+FALSE. An indifference curve only reveals the preferences of a consumer. To show inferiority and normality,
+we need to show optimal bundles at two different income levels. This will require at least two indiﬁ‘erence
+
+CUH'GS.
+
+b. (4 points) Assertion: The level of utility (weakly) increases as an individual moves downward along the
+demand curve.
+
+TR UE. Movement down the demand curve indicates a decrease in price, which rotates the budget constraint
+outwards, allowing the individual to expand her set of affordable market baskets and hence choose a basket
+that yields at least as much utility as be ore.
+
+c. (4 points) Both Angelina and Brad consume two goods. Both consumers have the same income (I) and
+face the same prices (PX and Py). Angelina has utility function
+
+uA(X, Y) = (X + 1)(Y + 1)
+while Brad’s utility function is
+
+uB(X,Y) = [(X + my + 1)]2
+
+Assertion: Since Brad obtains more utility from the two goods, his demand for each good will be greater
+than Angelina’s.
+
+FALSE. Brad’s utility is just an increasing transformation of Angelina’s and since utility only matters as
+an ordinal measure and not a cardinal one, they will consume the same optimal bundle. You can also verify
+that this is the case since they will have the same budget constraint, price ratio, and M RSﬁY = M RSgy.
+
+d. (4 points) The income effect for a good following a price change is negative. Assertion: This good must
+be an inferior good (at the current income).
+
+FALSE. This would be true if the price change was a price decrease. But if the price increased for a normal
+good, decreasing purchasing power, then the income effect would be negative.
+
+e. (4 points) The price of a watch increases by 10%, and you spend a larger fraction of your income on it.
+Assertion: The watch must be a Giffen good for you (at your current income).

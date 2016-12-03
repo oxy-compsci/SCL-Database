@@ -82,7 +82,7 @@ class Document:
     def has_text_file(self):
         return os.path.exists(self.text_path)
     def has_files(self):
-        return self.has_image_file() and self.has_text_file()
+        return self.has_text_file()
     def write_text_file(self):
         with open(self.text_path, "w") as file:
             file.write(self.text)

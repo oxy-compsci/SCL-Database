@@ -97,10 +97,10 @@ fi
 python3 database.py
 
 # update the repository with the new database
-#git add filecount.txt metadata.txt
-#git add completed_text_files/*.txt
-#git commit -m 'add images'
-#git push # FIXME need credentials here
+git add filecount.txt metadata.txt
+git add completed_text_files/*.txt
+git commit -m 'add more scanned files'
+cat git-secrets | git push
 
 # ask the user to close the window
 read -p 'Press <Enter> to close this window'
