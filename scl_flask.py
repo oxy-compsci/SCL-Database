@@ -24,13 +24,13 @@ def display_homepage():
         #         if len(instance.text) >= 150:
         #             description = instance.text[0:150]
         #         else:
+
         #             description = instance.text
         #     elif not text_match_indices_list:
         #         description = 'No text matches found.'
         #     result_filenames.append([instance.image_file, description, metamatches])
     for instance in read_documents():
         filenames.append(instance)
-    print(result_instances)
     return render_template('home.html', filenames=filenames, results=result_instances)
 
 @app.route('/scl/<file_name>')
