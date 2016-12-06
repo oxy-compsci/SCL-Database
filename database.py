@@ -26,20 +26,22 @@ METADATA_FILE = "metadata.txt"
 METADATA_FILE_NAME_FIELD = "File Name"
 METADATA_FIELDS = [
     METADATA_FILE_NAME_FIELD,
+    "Name of Picture Taker (Last, First)",
+    "Date Added (mm/dd/yyyy)",
+    "Box Number",
+    "Folder",
+    "Page Number",
     "Title",
     "Creator",
     "Subject",
     "Description",
     "Publisher",
-    "Date Added (mm/dd/yyyy)",
     "Type",
     "Format",
     "Source",
     "Language",
-    "Rights Management",
-    "Name of Uploader (Last, First)",
     "Tags and/or Keywords",
-    "Box Number",
+    "Rights Management",
     "Comments/Notes about File"
 ]
 
