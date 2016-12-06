@@ -6,9 +6,10 @@ from os.path import dirname, join, exists, realpath
 import requests
 import flickrapi
 
-USERNAME = "kevinoh4"
+PUBLIC_USERNAME = "scl-public"
+PRIVATE_USERNAME = "scl-volunteer"
 
-SPECIAL_ALBUMS = set(['Auto Upload', 'master'])
+MASTER_ALBUM_NAME = 'master'
 
 LOADING_ZONE = "loading_zone"
 
@@ -18,9 +19,9 @@ def indent_print(message, indent):
 def get_current_path():
     return dirname(realpath(__file__))
 
-def get_user_id(user):
-    flickr = authenticate_flickr()
-    userid = flickr.people.findByUsername(username=user)
+def get_user_id(username):
+    flickr = authenticate_flickr(username)
+    userid = flickr.people.findByUsername(username=username)
     return userid.find('user').get('nsid')
 
 def get_original_photo_url(flickr, photo_id):
@@ -58,11 +59,11 @@ def download_file(url, save_path):
             r.raw.decode_content = True
             shutil.copyfileobj(r.raw, f)
 
-def authenticate_flickr():
+def authenticate_flickr(username):
     # Read the API keys
     api_key, api_secret = read_flickr_keys()
     # Create a (potentially temporary) FlickrAPI instance
-    flickr = flickrapi.FlickrAPI(api_key, api_secret, username=USERNAME)
+    flickr = flickrapi.FlickrAPI(api_key, api_secret, username=username)
     # Only do this if we don't have a valid token already
     if not flickr.token_valid(perms="delete"):
         # Get a request token out-of-band (OOB)
@@ -81,12 +82,12 @@ def authenticate_flickr():
 def download_flickr_images():
     indent_print("Downloading photos from Flickr...", indent=0)
     # FIXME make sure directory is correct
-    flickr = authenticate_flickr()
-    user_id = get_user_id(USERNAME)
+    flickr = authenticate_flickr(PRIVATE_USERNAME)
+    user_id = get_user_id(PRIVATE_USERNAME)
     albums = flickr.photosets.getList(user_id=user_id).find("photosets")
     for album in albums:
         album_title = album.find("title").text
-        if album_title in SPECIAL_ALBUMS:
+        if album_title == MASTER_ALBUM_NAME:
             continue
         directory = join(get_current_path(), LOADING_ZONE, album_title)
         if not exists(directory):
@@ -103,20 +104,20 @@ def download_flickr_images():
 
 def upload_image(path):
     path = realpath(path)
-    flickr = authenticate_flickr()
-    user_id = get_user_id(USERNAME)
+    flickr = authenticate_flickr(PUBLIC_USERNAME)
+    user_id = get_user_id(PUBLIC_USERNAME)
     albums = flickr.photosets.getList(user_id=user_id).find("photosets")
     master_album = None
     for album in albums:
         album_title = album.find("title").text
-        if album_title != "master":
+        if album_title != MASTER_ALBUM_NAME:
             continue
         master_album = album
         break
     photo_id = flickr.upload(filename=path).find("photoid").text
     if master_album is None:
         rsp = flickr.photosets.create(
-                title="master",
+                title=MASTER_ALBUM_NAME,
                 primary_photo_id=photo_id,
         )
         master_album = rsp.find('photoset')
@@ -141,12 +142,12 @@ def upload_images(paths):
     return urls
 
 def main():
-    flickr = authenticate_flickr()
-    user_id = get_user_id(USERNAME)
+    flickr = authenticate_flickr(PRIVATE_USERNAME)
+    user_id = get_user_id(PRIVATE_USERNAME)
     albums = flickr.photosets.getList(user_id=user_id).find("photosets")
     for album in albums:
         album_title = album.find("title").text
-        if album_title in SPECIAL_ALBUMS:
+        if album_title == MASTER_ALBUM_NAME:
             continue
         print(album_title)
         for photo in flickr.walk_set(album.get("id")):
