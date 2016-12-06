@@ -1,5 +1,5 @@
 .idea/*
-api_keys
+completed_files/*
 .DS_Store
 __pycache__
-completed_files/*
+api_keys
