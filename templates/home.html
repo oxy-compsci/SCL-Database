@@ -86,9 +86,9 @@
 <div class="search_results">
 {% if results %}
     {%  if results == 'No search matches found.' %}
-        <p>No search matches found.</p>
+        <p>No search matches found for "{{ search_term }}."</p>
     {% else %}
-        <p>Search results...</p>
+        <p>Search results for "{{ search_term }}."</p>
         {% for instance in results %}
             <table border=".5" width="100%">
             <tbody>

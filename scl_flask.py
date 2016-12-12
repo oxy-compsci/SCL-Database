@@ -10,7 +10,7 @@ def display_homepage():
     result_instances = search_term_in_metadata_and_text(search_term)
     for instance in read_documents():
         filenames.append(instance)
-    return render_template('home.html', filenames=filenames, results=result_instances)
+    return render_template('home.html', filenames=filenames, results=result_instances, search_term=search_term)
 
 @app.route('/scl/<file_name>')
 def display_images(file_name):
