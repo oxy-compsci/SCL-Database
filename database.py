@@ -182,9 +182,6 @@ def request_new_file_number():
         file.write(str(file_number + 1))
     return file_number
 
-def ocr_extract(path):
-    return pytesseract.image_to_string(Image.open(path))
-
 def rotate_image_ocr(path):
     images = [Image.open(path)]
     text = pytesseract.image_to_string(images[-1])
@@ -261,11 +258,14 @@ def run_images():
         path = os.path.join(LOADING_ZONE, folder)
         if os.path.isdir(path):
             indent_print("Looking at folder {}...".format(folder), indent=1)
-            if text_file_exists(path):
-                new_documents.extend(run_folder_images(path))
-            else:
+            if not text_file_exists(path):
                 indent_print("No metadata file found; skipping...", indent=2)
                 continue
+            metadata = read_folder_metadata(path)
+            if all(s == "" for s in metadata.values()):
+                indent_print("Metadata file is empty; skipping...", indent=2)
+                continue
+            new_documents.extend(run_folder_images(path))
     return new_documents
 
 if __name__ == "__main__":
