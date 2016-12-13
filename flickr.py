@@ -6,6 +6,8 @@ from os.path import dirname, join, exists, realpath
 import requests
 import flickrapi
 
+API_KEY_FILE = "api_keys"
+
 PUBLIC_USERNAME = "scl-public"
 PRIVATE_USERNAME = "scl-volunteer"
 
@@ -44,7 +46,7 @@ def get_photo_url(flickr, photo_id, size='medium'):
     return url_template.format(size_suffix=suffix, **dict(photo.items()))
 
 def read_flickr_keys():
-    if not exists("api_keys"):
+    if not exists(API_KEY_FILE):
         print("ERROR: Unable to read Flickr API keys")
         print("Please contact Justin Li <justinnhli@oxy.edu> for support")
         exit(1)
