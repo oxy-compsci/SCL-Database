@@ -91,17 +91,20 @@ def download_flickr_images():
         if album_title == MASTER_ALBUM_NAME:
             continue
         directory = join(get_current_path(), LOADING_ZONE, album_title)
-        if not exists(directory):
-            makedirs(directory)
+        if exists(directory):
+            indent_print("Album already downloaded; skipping...")
+            continue
+        makedirs(directory)
         indent_print("Downloading album {}..".format(album_title), indent=1)
         for photo in flickr.walk_set(album.get("id")):
             url = get_original_photo_url(flickr, photo.get('id'))
             filename = url.split("/")[-1]
             download_file(url, join(directory, filename))
             indent_print("Downloaded {}".format(filename), indent=2)
-            flickr.photos.delete(photo_id=photo.get('id'))
-        flickr.photosets.delete(photoset_id=album.get('id'))
-        shutil.copyfile(join(LOADING_ZONE, 'template.txt'), join(directory, 'template.txt'))
+            #flickr.photos.delete(photo_id=photo.get('id'))
+        #flickr.photosets.delete(photoset_id=album.get('id'))
+        if not exists(join(LOADING_ZONE, 'template.txt')):
+            shutil.copyfile(join(LOADING_ZONE, 'template.txt'), join(directory, 'template.txt'))
 
 def upload_image(path):
     path = realpath(path)
