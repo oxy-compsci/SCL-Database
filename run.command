@@ -58,19 +58,19 @@ git_check() {
 }
 
 pip_check() {
-	if ! which pip >/dev/null 2>&1; then
-		echo 'pip not detected; installing...'
+	if ! which pip3 >/dev/null 2>&1; then
+		echo 'pip3 not detected; installing...'
 		# FIXME
 	fi
-	if ! which pip >/dev/null 2>&1; then
+	if ! which pip3 >/dev/null 2>&1; then
 		echo
-		echo 'ERROR: Unable to install pip'
+		echo 'ERROR: Unable to install pip3'
 		echo 'Please contact Justin Li <justinnhli@oxy.edu> for support'
 		exit 1
 	fi
 	cat requirements.txt | sed 's/=.*//' | while read module; do
-		if ! pip list 2>/dev/null | grep "$module" >/dev/null 2>&1; then
-			pip install -r requirements.txt
+		if ! pip3 list 2>/dev/null | grep "$module" >/dev/null 2>&1; then
+			pip3 install -r requirements.txt
 			break
 		fi
 	done
