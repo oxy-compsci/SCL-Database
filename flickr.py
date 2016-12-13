@@ -8,8 +8,8 @@ import flickrapi
 
 API_KEY_FILE = "api_keys"
 
-PUBLIC_USERNAME = "scl-public"
-PRIVATE_USERNAME = "scl-volunteer"
+PUBLIC_USERNAME = "sclarchives"
+PRIVATE_USERNAME = "socallibrary"
 
 MASTER_ALBUM_NAME = 'master'
 
