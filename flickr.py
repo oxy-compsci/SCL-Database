@@ -21,8 +21,7 @@ def indent_print(message, indent):
 def get_current_path():
     return dirname(realpath(__file__))
 
-def get_user_id(username):
-    flickr = authenticate_flickr(username)
+def get_user_id(flickr, username):
     userid = flickr.people.findByUsername(username=username)
     return userid.find('user').get('nsid')
 
@@ -85,7 +84,7 @@ def download_flickr_images():
     indent_print("Downloading photos from Flickr...", indent=0)
     # FIXME make sure directory is correct
     flickr = authenticate_flickr(PRIVATE_USERNAME)
-    user_id = get_user_id(PRIVATE_USERNAME)
+    user_id = get_user_id(flickr, PRIVATE_USERNAME)
     albums = flickr.photosets.getList(user_id=user_id).find("photosets")
     for album in albums:
         album_title = album.find("title").text
@@ -107,7 +106,7 @@ def download_flickr_images():
 def upload_image(path):
     path = realpath(path)
     flickr = authenticate_flickr(PUBLIC_USERNAME)
-    user_id = get_user_id(PUBLIC_USERNAME)
+    user_id = get_user_id(flickr, PUBLIC_USERNAME)
     albums = flickr.photosets.getList(user_id=user_id).find("photosets")
     master_album = None
     for album in albums:
@@ -145,7 +144,7 @@ def upload_images(paths):
 
 def main():
     flickr = authenticate_flickr(PRIVATE_USERNAME)
-    user_id = get_user_id(PRIVATE_USERNAME)
+    user_id = get_user_id(flickr, PRIVATE_USERNAME)
     albums = flickr.photosets.getList(user_id=user_id).find("photosets")
     for album in albums:
         album_title = album.find("title").text
