@@ -92,7 +92,7 @@ def download_flickr_images():
             continue
         directory = join(get_current_path(), LOADING_ZONE, album_title)
         if exists(directory):
-            indent_print("Album already downloaded; skipping...")
+            indent_print("Album already downloaded; skipping...", indent=1)
             continue
         makedirs(directory)
         indent_print("Downloading album {}..".format(album_title), indent=1)
