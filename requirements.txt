@@ -1,6 +1,6 @@
-Flask==0.11.1
+Flask==1.0.2
 flickrapi==2.1.2
-gunicorn==19.6.0
+gunicorn==19.9.0
 Pillow==3.4.2
 pip==9.0.1
 pytesseract==0.1.6
