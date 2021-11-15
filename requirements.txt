@@ -2,6 +2,6 @@ Flask==1.0.2
 flickrapi==2.1.2
 gunicorn==19.9.0
 Pillow==8.1.1
-pip==19.2
+pip==21.1
 pytesseract==0.1.6
 setuptools==20.10.1
